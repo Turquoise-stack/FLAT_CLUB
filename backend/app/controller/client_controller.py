@@ -1,13 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
 from sqlalchemy.orm import Session
+from schemas.schemas import LoginRequest, RegisterRequest
 from database import SessionLocal
 from model.client_model import User
 from service.auth import verify_password, get_password_hash, create_access_token
+from sqlalchemy.sql import text  
 
-# Create a router for user-related routes
+
 router = APIRouter()
-
 
 # Dependency to get a database session
 def get_db():
@@ -42,3 +42,12 @@ def login(request: LoginRequest, db: Session = Depends(get_db)):
     
     token = create_access_token({"sub": user.email})
     return {"access_token": token, "token_type": "bearer"}
+
+@router.get("/health-check")
+def health_check(db: Session = Depends(get_db)):
+    try:
+        # Use text to execute the SQL query
+        db.execute(text("SELECT 1"))
+        return {"status": "ok", "database": "connected"}
+    except Exception as e:
+        return {"status": "error", "database": "disconnected", "details": str(e)}
