@@ -13,7 +13,7 @@ from dependencies import get_db
 # Secret key for JWT
 SECRET_KEY = "your_secret_key"
 ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
+ACCESS_TOKEN_EXPIRE_MINUTES = 600
 
 # OAuth2 scheme for retrieving tokens
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/token")
@@ -37,14 +37,15 @@ def create_access_token(data: dict):
 
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
     try:
-# decode the jwt tokenPP
         payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
-        user_id: int = payload.get("sub")
-        if user_id is None:
-            raise HTTPException(status_code=401, detail="Invalid authentication credentials")
-        
-        # fetch userZ
-        user = db.query(User).filter(User.user_id == user_id).first()
+        sub: str = payload.get("sub")
+        user = None
+        if sub.isdigit():  # new tokens with user_id
+            user_id = int(sub)
+            user = db.query(User).filter(User.user_id == user_id).first()
+        else:  # legacy tokens with email
+            email = sub
+            user = db.query(User).filter(User.email == email).first()
         if user is None:
             raise HTTPException(status_code=401, detail="User not found")
         return user

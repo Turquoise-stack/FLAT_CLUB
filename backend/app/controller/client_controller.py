@@ -5,7 +5,7 @@ from sqlalchemy import func
 
 from schemas.schemas import LoginRequest, RegisterRequest, PasswordResetRequest, UserListResponse, UserProfileResponse, UserProfileUpdateRequest
 from model.client_model import User
-from service.auth import verify_password, get_password_hash, create_access_token, ALGORITHM, SECRET_KEY
+from service.auth import get_current_user, verify_password, get_password_hash, create_access_token, ALGORITHM, SECRET_KEY
 from dependencies import get_db
 from jose import jwt, JWTError
 
@@ -182,3 +182,24 @@ def list_all_users(
             for user in users
         ],
     }
+
+@router.delete("/users/{user_id}")
+def delete_user(
+    user_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    # Only admins or the user themselves can delete a user
+    if current_user.role != "admin" and current_user.user_id != user_id:
+        raise HTTPException(status_code=403, detail="Not authorized to delete this user")
+    
+    # Fetch the user
+    user = db.query(User).filter(User.user_id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Delete the user
+    db.delete(user)
+    db.commit()
+    
+    return {"message": f"User with ID {user_id} has been deleted"}
