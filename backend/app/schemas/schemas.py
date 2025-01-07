@@ -1,4 +1,6 @@
 from pydantic import BaseModel, Field, EmailStr
+from typing import Optional
+
 
 class LoginRequest(BaseModel):
     email: str
@@ -6,7 +8,12 @@ class LoginRequest(BaseModel):
 
 class RegisterRequest(BaseModel):
     email: str
+    username: str
     password: str
+    name: str
+    surname: str
+    role: Optional[str] = None
+    preferences: Optional[dict] = None
 
 class PasswordResetRequest(BaseModel):
     email: EmailStr = Field(None, description="Email for requesting the password reset")
