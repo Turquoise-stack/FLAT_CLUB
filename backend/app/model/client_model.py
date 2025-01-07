@@ -125,3 +125,6 @@ class Media(Base):
     url = Column(String, nullable=False)
     user_id = Column(Integer, ForeignKey("users.user_id"), nullable=True)
     listing_id = Column(Integer, ForeignKey("listings.listing_id"), nullable=True)
+    
+    # Relationships
+    user = relationship("User", back_populates="media")
