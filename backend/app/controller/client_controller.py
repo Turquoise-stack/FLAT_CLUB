@@ -52,7 +52,7 @@ def login(request: LoginRequest, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.email == request.email).first()
 
     # Validatte user and password
-    if not user or not verify_password(request.password, user.hashed_password):
+    if not user or not verify_password(request.password, user.password):
         raise HTTPException(status_code=400, detail="Invalid credentials")
     
     # Create a jwt token
