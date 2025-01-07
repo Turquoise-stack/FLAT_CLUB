@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks  
 from sqlalchemy.orm import Session
-from schemas.schemas import LoginRequest, RegisterRequest, PasswordResetRequest, UserProfileResponse
+from schemas.schemas import LoginRequest, RegisterRequest, PasswordResetRequest, UserProfileResponse, UserProfileUpdateRequest
 from model.client_model import User
 from service.auth import verify_password, get_password_hash, create_access_token, ALGORITHM, SECRET_KEY
 from dependencies import get_db
@@ -103,6 +103,45 @@ def get_user_profile(user_id: int, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.user_id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
+    return {
+        "user_id": user.user_id,
+        "name": user.name,
+        "surname": user.surname,
+        "username": user.username,
+        "email": user.email,
+        "phone_number": user.phone_number,
+        "role": user.role,
+        "bio": user.bio,
+        "preferences": user.preference,
+        "created_at": user.created_at.isoformat(),
+    }
+
+@router.put("/users/{user_id}", response_model=UserProfileResponse)
+def update_user_profile(
+    user_id: int, 
+    profile_update: UserProfileUpdateRequest, 
+    db: Session = Depends(get_db)
+):
+    # Fetch user
+    user = db.query(User).filter(User.user_id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Update the fields if its provided
+    if profile_update.name is not None:
+        user.name = profile_update.name
+    if profile_update.surname is not None:
+        user.surname = profile_update.surname
+    if profile_update.phone_number is not None:
+        user.phone_number = profile_update.phone_number
+    if profile_update.bio is not None:
+        user.bio = profile_update.bio
+    if profile_update.preferences is not None:
+        user.preference = profile_update.preferences.dict()  
+    
+    db.commit()
+    db.refresh(user)
+    
     return {
         "user_id": user.user_id,
         "name": user.name,

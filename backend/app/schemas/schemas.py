@@ -43,3 +43,22 @@ class UserProfileResponse(BaseModel):
     bio: Optional[str]
     preferences: Optional[UserPreferences]
     created_at: str
+
+class UserProfileUpdateRequest(BaseModel):
+    name: Optional[str]
+    surname: Optional[str]
+    phone_number: Optional[str]
+    bio: Optional[str]
+    preferences: Optional[UserPreferences]
+
+class UserSummary(BaseModel):
+    user_id: int
+    name: Optional[str]
+    surname: Optional[str]
+    username: str
+    email: Optional[EmailStr]
+    role: str
+
+class UserListResponse(BaseModel):
+    total: int
+    users: List[UserSummary]
