@@ -79,4 +79,5 @@ def password_reset(request: PasswordResetRequest, db: Session = Depends(get_db))
 
         return {"message": "Password has been reset successfully"}
 
+    # Fallback for invalid requests
     raise HTTPException(status_code=400, detail="Invalid request. Provide email or token with new password.")
