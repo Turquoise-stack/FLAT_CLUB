@@ -1,6 +1,9 @@
-from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks  
+from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks  , Query
+
 from sqlalchemy.orm import Session
-from schemas.schemas import LoginRequest, RegisterRequest, PasswordResetRequest, UserProfileResponse, UserProfileUpdateRequest
+from sqlalchemy import func
+
+from schemas.schemas import LoginRequest, RegisterRequest, PasswordResetRequest, UserListResponse, UserProfileResponse, UserProfileUpdateRequest
 from model.client_model import User
 from service.auth import verify_password, get_password_hash, create_access_token, ALGORITHM, SECRET_KEY
 from dependencies import get_db
@@ -153,4 +156,29 @@ def update_user_profile(
         "bio": user.bio,
         "preferences": user.preference,
         "created_at": user.created_at.isoformat(),
+    }
+
+@router.get("/users", response_model=UserListResponse)
+def list_all_users(
+    skip: int = Query(0, ge=0), 
+    limit: int = Query(10, le=100), 
+    db: Session = Depends(get_db)
+):
+    # Fetch total count and results
+    total_users = db.query(func.count(User.user_id)).scalar()
+    users = db.query(User).offset(skip).limit(limit).all()
+    
+    return {
+        "total": total_users,
+        "users": [
+            {
+                "user_id": user.user_id,
+                "name": user.name,
+                "surname": user.surname,
+                "username": user.username,
+                "email": user.email,
+                "role": user.role,
+            }
+            for user in users
+        ],
     }
