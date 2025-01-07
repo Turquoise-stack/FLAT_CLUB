@@ -71,7 +71,7 @@ def update_listing(
 
     db.commit()
     db.refresh(listing)
-    
+
     return {
         "listing_id": listing.listing_id,
         "owner_id" : listing.owner_id,
@@ -85,3 +85,26 @@ def update_listing(
         "updated": listing.updated.isoformat(),
         "status": listing.status
     }
+
+
+@router.delete("/listings/{listing_id}")
+def delete_listing(
+    listing_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    listing = db.query(Listing).filter(Listing.listing_id == listing_id).first()
+
+    # Only admins or the user themselves can delete their own lsitng
+    if current_user.role != "admin" and current_user.user_id != listing.owner_id:
+        raise HTTPException(status_code=403, detail="Not authorized to delete this user")
+    
+    # Fetch the listing
+    if not listing:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Delete the listing
+    db.delete(listing)
+    db.commit()
+    
+    return {"message": f"Listing with ID {listing_id} has been deleted"}
