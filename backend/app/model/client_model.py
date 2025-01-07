@@ -11,22 +11,33 @@ class ListingStatus(enum.Enum):
 
 class User(Base):
     __tablename__ = "users"
+    
+    # pk
     user_id = Column(Integer, primary_key=True, index=True)
-    username = Column(String, unique=True, nullable=False)
-    email = Column(String, unique=True, nullable=False)
+
+    name = Column(String, nullable=True) 
+    surname = Column(String, nullable=True)  
+    username = Column(String, unique=True, nullable=False)  
+    email = Column(String, unique=True, nullable=True)  
+    phone_number = Column(String, nullable=True)  
+
     password = Column(String, nullable=False)
-    role = Column(String, nullable=False)
-    preference = Column(JSON, nullable=True)
+
+    # preferences and other info
+    role = Column(String, nullable=False)  # Example: "tenant" or "owner"
+    preference = Column(JSON, nullable=True)  # JSON for dynamic preferences
     bio = Column(String, nullable=True)
+    
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
-    # Relationships
-    listings = relationship("Listing", back_populates="owner")
-    messages_sent = relationship("Message", foreign_keys="Message.sender_id", back_populates="sender")
-    messages_received = relationship("Message", foreign_keys="Message.recipient_id", back_populates="recipient")
-    groups_owned = relationship("Group", back_populates="owner")
-    group_memberships = relationship("GroupMember", back_populates="user")
-    ratings = relationship("Rating", back_populates="user")
+    # relationships
+    listings = relationship("Listing", back_populates="owner")  
+    groups_owned = relationship("Group", back_populates="owner")  
+    group_memberships = relationship("GroupMember", back_populates="user")  
+    messages_sent = relationship("Message", foreign_keys="Message.sender_id", back_populates="sender") 
+    messages_received = relationship("Message", foreign_keys="Message.recipient_id", back_populates="recipient")  
+    ratings = relationship("Rating", back_populates="user") 
+    media = relationship("Media", back_populates="user")  # Media Uploaded
 
 class Listing(Base):
     __tablename__ = "listings"
@@ -36,7 +47,7 @@ class Listing(Base):
     description = Column(Text, nullable=False)
     price = Column(Float, nullable=False)
     location = Column(String, nullable=False)
-    images = Column(Integer)  # Reference to Media table
+    images = Column(Integer)  #   Media table
     created = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     status = Column(Enum(ListingStatus), default=ListingStatus.ACTIVE, nullable=False)
