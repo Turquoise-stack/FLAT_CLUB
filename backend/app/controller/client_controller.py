@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks  , Query
 from sqlalchemy.orm import Session
 from sqlalchemy import func
 
-from schemas.schemas import LoginRequest, RegisterRequest, PasswordResetRequest, UserListResponse, UserProfileResponse, UserProfileUpdateRequest
+from schemas.user_schemas import LoginRequest, RegisterRequest, PasswordResetRequest, UserListResponse, UserProfileResponse, UserProfileUpdateRequest
 from model.client_model import User
 from service.auth import get_current_user, verify_password, get_password_hash, create_access_token, ALGORITHM, SECRET_KEY
 from dependencies import get_db
@@ -124,7 +124,7 @@ def update_user_profile(
     user_id: int, 
     profile_update: UserProfileUpdateRequest, 
     db: Session = Depends(get_db)
-):
+    ):
     # Fetch user
     user = db.query(User).filter(User.user_id == user_id).first()
     if not user:

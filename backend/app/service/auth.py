@@ -51,3 +51,18 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
         return user
     except JWTError:
         raise HTTPException(status_code=401, detail="Invalid authentication credentials")
+
+def get_user_id(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)):
+    try:
+        payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
+        sub: str = payload.get("sub")
+        user_id = None
+        if sub.isdigit(): 
+            user_id = int(sub)
+            return user_id
+        
+        elif user_id is None:
+            raise HTTPException(status_code=401, detail="User not found")
+        return user_id
+    except JWTError:
+        raise HTTPException(status_code=401, detail="Invalid authentication credentials")

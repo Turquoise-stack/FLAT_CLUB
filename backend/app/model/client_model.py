@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, String, ForeignKey, Text, Enum, JSON, Float, DateTime, create_engine
+from sqlalchemy import Column, Integer, String, ForeignKey, Text, Enum, JSON, Float, Boolean, DateTime, create_engine
 from sqlalchemy.orm import relationship
 from database import Base
 from datetime import datetime
@@ -46,6 +46,7 @@ class Listing(Base):
     title = Column(String, nullable=False)
     description = Column(Text, nullable=False)
     price = Column(Float, nullable=False)
+    isRental = Column(Boolean, nullable=False)
     location = Column(String, nullable=False)
     images = Column(Integer)  #   Media table
     created = Column(DateTime, default=datetime.utcnow, nullable=False)
