@@ -31,3 +31,15 @@ class RegisterRequest(BaseModel):
     role: Optional[str] = "user"  
     bio: Optional[str] = None  
     preferences: Optional[UserPreferences] = None  
+
+class UserProfileResponse(BaseModel):
+    user_id: int
+    name: Optional[str]
+    surname: Optional[str]
+    username: str
+    email: Optional[EmailStr]
+    phone_number: Optional[str]
+    role: str
+    bio: Optional[str]
+    preferences: Optional[UserPreferences]
+    created_at: str

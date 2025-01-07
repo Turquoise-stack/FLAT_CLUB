@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks  
 from sqlalchemy.orm import Session
-from schemas.schemas import LoginRequest, RegisterRequest, PasswordResetRequest
+from schemas.schemas import LoginRequest, RegisterRequest, PasswordResetRequest, UserProfileResponse
 from model.client_model import User
 from service.auth import verify_password, get_password_hash, create_access_token, ALGORITHM, SECRET_KEY
 from dependencies import get_db
@@ -97,3 +97,21 @@ def password_reset(request: PasswordResetRequest, db: Session = Depends(get_db))
 
     # Fallback for invalid requests
     raise HTTPException(status_code=400, detail="Invalid request. Provide email or token with new password.")
+
+@router.get("/users/{user_id}", response_model=UserProfileResponse)
+def get_user_profile(user_id: int, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.user_id == user_id).first()
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return {
+        "user_id": user.user_id,
+        "name": user.name,
+        "surname": user.surname,
+        "username": user.username,
+        "email": user.email,
+        "phone_number": user.phone_number,
+        "role": user.role,
+        "bio": user.bio,
+        "preferences": user.preference,
+        "created_at": user.created_at.isoformat(),
+    }
