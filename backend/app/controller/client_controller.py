@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks  , Query
 
 from sqlalchemy.orm import Session
-from sqlalchemy import func
+from sqlalchemy import JSON, Column, func
 
 from schemas.user_schemas import LoginRequest, RegisterRequest, PasswordResetRequest, UserListResponse, UserProfileResponse, UserProfileUpdateRequest
 from model.client_model import User
@@ -13,7 +13,10 @@ router = APIRouter()
 
 
 @router.post("/register")
-def register(request: RegisterRequest, db: Session = Depends(get_db)):
+def register(
+    request: RegisterRequest, 
+    db: Session = Depends(get_db)
+    ):
     # validate if username or email already exists
     if request.email:
         existing_user = db.query(User).filter(User.email == request.email).first()
@@ -37,7 +40,8 @@ def register(request: RegisterRequest, db: Session = Depends(get_db)):
         password=hashed_password,
         role=request.role or "user",  # Default role is user
         preference=request.preferences.dict() if request.preferences else None,
-        bio=request.bio 
+        bio=request.bio,
+        pets=request.pets.dict() if request.pets else None,
     )
 
     db.add(new_user)
@@ -102,10 +106,16 @@ def password_reset(request: PasswordResetRequest, db: Session = Depends(get_db))
     raise HTTPException(status_code=400, detail="Invalid request. Provide email or token with new password.")
 
 @router.get("/users/{user_id}", response_model=UserProfileResponse)
-def get_user_profile(user_id: int, db: Session = Depends(get_db)):
+def get_user_profile(
+    user_id: int, 
+    db: Session = Depends(get_db)):
+
     user = db.query(User).filter(User.user_id == user_id).first()
+
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
+    
+
     return {
         "user_id": user.user_id,
         "name": user.name,
@@ -116,6 +126,7 @@ def get_user_profile(user_id: int, db: Session = Depends(get_db)):
         "role": user.role,
         "bio": user.bio,
         "preferences": user.preference,
+        "pets": user.pets,
         "created_at": user.created_at.isoformat(),
     }
 
@@ -139,6 +150,8 @@ def update_user_profile(
         user.phone_number = profile_update.phone_number
     if profile_update.bio is not None:
         user.bio = profile_update.bio
+    if profile_update.pets is not None:
+        user.pets = profile_update.pets.dict()
     if profile_update.preferences is not None:
         user.preference = profile_update.preferences.dict()  
     
@@ -155,6 +168,7 @@ def update_user_profile(
         "role": user.role,
         "bio": user.bio,
         "preferences": user.preference,
+        "pets": user.pets,
         "created_at": user.created_at.isoformat(),
     }
 

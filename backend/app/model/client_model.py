@@ -20,14 +20,14 @@ class User(Base):
     username = Column(String, unique=True, nullable=False)  
     email = Column(String, unique=True, nullable=True)  
     phone_number = Column(String, nullable=True)  
-
     password = Column(String, nullable=False)
 
     # preferences and other info
-    role = Column(String, nullable=False)  # Example: "tenant" or "owner"
+    role = Column(String, nullable=False)  # Example: tenant ovner and admin
     preference = Column(JSON, nullable=True)  # JSON for dynamic preferences
     bio = Column(String, nullable=True)
-    
+    pets = Column(JSON, nullable=True) 
+
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
     # relationships
@@ -41,6 +41,7 @@ class User(Base):
 
 class Listing(Base):
     __tablename__ = "listings"
+    
     listing_id = Column(Integer, primary_key=True, index=True)
     owner_id = Column(Integer, ForeignKey("users.user_id"), nullable=False)
     title = Column(String, nullable=False)
@@ -49,6 +50,7 @@ class Listing(Base):
     isRental = Column(Boolean, nullable=False)
     location = Column(String, nullable=False)
     images = Column(Integer)  #   Media table
+    preferences = Column(JSON, nullable=True)
     created = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     status = Column(Enum(ListingStatus), default=ListingStatus.ACTIVE, nullable=False)
@@ -129,3 +131,4 @@ class Media(Base):
     
     # Relationships
     user = relationship("User", back_populates="media")
+

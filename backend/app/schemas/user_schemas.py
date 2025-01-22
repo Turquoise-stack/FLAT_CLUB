@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, EmailStr
-from typing import List, Optional
+from typing import Dict, List, Optional, Tuple
 
 class LoginRequest(BaseModel):
     email: str
@@ -9,6 +9,10 @@ class PasswordResetRequest(BaseModel):
     email: EmailStr = Field(None, description="Email for requesting the password reset")
     token: str = Field(None, description="JWT token for verifying reset")
     new_password: str = Field(None, description="New password for resetting")
+
+class PetsInfo(BaseModel):
+    has_pets: Optional[bool]  # true if the user has pets
+    species: Optional[List[str]]  # List of species ["Iguana", "Siberian Tiger"]
 
 class UserPreferences(BaseModel):
     language: List[str]  # list of languages
@@ -20,6 +24,8 @@ class UserPreferences(BaseModel):
     preferred_sex_to_live_with: Optional[List[str]]  # male fmale etc.
     religion: Optional[str]
     vegan: Optional[bool] # true for vegan, false for not
+    quiet_hours: Optional[Dict[str, str]] = None  # ("22:00", "08:00")
+
 
 class RegisterRequest(BaseModel):
     name: Optional[str] = None 
@@ -31,6 +37,7 @@ class RegisterRequest(BaseModel):
     role: Optional[str] = "user"  
     bio: Optional[str] = None  
     preferences: Optional[UserPreferences] = None  
+    pets: Optional[PetsInfo] = None
 
 class UserProfileResponse(BaseModel):
     user_id: int
@@ -42,6 +49,7 @@ class UserProfileResponse(BaseModel):
     role: str
     bio: Optional[str]
     preferences: Optional[UserPreferences]
+    pets: Optional[PetsInfo] = None
     created_at: str
 
 class UserProfileUpdateRequest(BaseModel):
@@ -50,6 +58,7 @@ class UserProfileUpdateRequest(BaseModel):
     phone_number: Optional[str]
     bio: Optional[str]
     preferences: Optional[UserPreferences]
+    pets: Optional[PetsInfo] = None 
 
 class UserSummary(BaseModel):
     user_id: int

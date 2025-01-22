@@ -1,4 +1,6 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from typing import List, Optional
+from fastapi import APIRouter, Depends, HTTPException, Query, status
+from sqlalchemy import and_
 from sqlalchemy.orm import Session
 from service.auth import get_current_user, get_user_id
 from schemas.listing_schemas import ListingCreate, ListingResponse, ListingUpdateRequest
@@ -8,7 +10,12 @@ from dependencies import get_db
 router = APIRouter()
 
 @router.post("/listings", status_code=status.HTTP_201_CREATED)
-def create_listing(listing: ListingCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+def create_listing(
+    listing: ListingCreate, 
+    db: Session = Depends(get_db), 
+    current_user: User = Depends(get_current_user)
+    ):
+
     new_listing = Listing(
         title=listing.title,
         description=listing.description,
@@ -16,11 +23,13 @@ def create_listing(listing: ListingCreate, db: Session = Depends(get_db), curren
         location=listing.location,
         isRental=listing.isRental,
         status=listing.status,
+        preferences=listing.preferences.dict() if listing.preferences else None, 
         owner_id=current_user.user_id  # Replace with actual owner_id logic (e.g., from JWT)
     )
     db.add(new_listing)
     db.commit()
     db.refresh(new_listing)
+    
     return {"success": True, "data": new_listing}
 
 @router.get("/listings/{listing_id}", response_model=ListingResponse)
@@ -39,7 +48,8 @@ def get_listing(listing_id: int, db: Session = Depends(get_db)):
         "images": listing.images,
         "created": listing.created.isoformat(),
         "updated": listing.updated.isoformat(),
-        "status": listing.status
+        "status": listing.status,
+        "preferences": listing.preferences,
     }
 
 
@@ -108,3 +118,38 @@ def delete_listing(
     db.commit()
     
     return {"message": f"Listing with ID {listing_id} has been deleted"}
+
+
+@router.get("/listings/search", response_model=List[ListingResponse])
+def search_listings(
+    location: Optional[str] = None,
+    min_price: Optional[float] = None,
+    max_price: Optional[float] = None,
+    pet_friendly: Optional[bool] = None,
+    smoking: Optional[bool] = None,
+    party_friendly: Optional[bool] = None,
+    language: Optional[List[str]] = Query(None),
+    db: Session = Depends(get_db)
+):
+    # Build the query filter based on provided parameters
+    filters = []
+    
+    if location:
+        filters.append(Listing.location.ilike(f"%{location}%"))
+    if min_price is not None:
+        filters.append(Listing.price >= min_price)
+    if max_price is not None:
+        filters.append(Listing.price <= max_price)
+    if pet_friendly is not None:
+        filters.append(Listing.preferences["pet_friendly"] == pet_friendly)
+    if smoking is not None:
+        filters.append(Listing.preferences["smoking"] == smoking)
+    if party_friendly is not None:
+        filters.append(Listing.preferences["party_friendly"] == party_friendly)
+    if language:
+        filters.append(Listing.preferences["language"].overlap(language))
+
+    # Query the listings with the applied filters
+    listings = db.query(Listing).filter(and_(*filters)).all()
+    
+    return listings
