@@ -30,14 +30,17 @@ class ListingCreate(BaseModel):
 
 class ListingResponse(BaseModel):
     listing_id: int
-    owner_id : int
+    owner_id: int
     title: str
     description: str
     price: float
     location: str
-    isRental : bool
+    isRental: bool
     images: Optional[int]
-    created: str
-    updated: Optional[str]
+    created: str  # Changed from datetime to str
+    updated: Optional[str]  # Changed from datetime to str
     status: Optional[str] = "active"
-    preferences: Optional[ListingPreferences] 
+    preferences: Optional[dict]  # Assuming preferences are JSON
+
+    class Config:
+        orm_mode = True  # Allows SQLAlchemy objects to be directly serialized
