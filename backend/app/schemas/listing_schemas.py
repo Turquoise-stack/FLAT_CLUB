@@ -59,18 +59,6 @@ class GroupCreate(BaseModel):
     description: Optional[str]
     listing_id: int
 
-class GroupResponse(BaseModel):
-    group_id: int
-    name: str
-    description: Optional[str]
-    listing_id: int
-    owner_id: int
-    members: List[GroupMemberResponse]  
-
-    class Config:
-        orm_mode = True
-
-
 class RentDivision(BaseModel):
     member_id: int
     percentage: float
@@ -86,3 +74,15 @@ class LifestylePreference(BaseModel):
 
 class UpdateGroupPreferenceRequest(BaseModel):
     lifestyle_preference: LifestylePreference
+
+class GroupResponse(BaseModel):
+    group_id: int
+    name: str
+    description: Optional[str]
+    listing_id: int
+    owner_id: int
+    members: List[GroupMemberResponse]
+    lifestyle_preference: Optional[LifestylePreference]
+
+    class Config:
+        orm_mode = True
