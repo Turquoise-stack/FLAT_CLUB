@@ -3,8 +3,8 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import and_, func
 from sqlalchemy.orm import Session
 from service.auth import get_current_user, get_user_id
-from schemas.listing_schemas import ListingCreate, ListingResponse, ListingUpdateRequest
-from model.client_model import Listing, User
+from schemas.listing_schemas import GroupCreate, GroupResponse, ListingCreate, ListingResponse, ListingUpdateRequest
+from model.client_model import Group, Listing, User
 from dependencies import get_db
 import logging
 
@@ -53,59 +53,37 @@ def search_listings(
     db: Session = Depends(get_db),
 ):
     filters = []
-    logger.info("Starting search with the following parameters: %s", {
-        "location": location,
-        "min_price": min_price,
-        "max_price": max_price,
-        "pet_friendly": pet_friendly,
-        "smoking": smoking,
-        "party_friendly": party_friendly,
-        "vegan": vegan,
-        "quiet_hours_start": quiet_hours_start,
-        "quiet_hours_end": quiet_hours_end,
-        "language": language,
-    })
     
     # Location filter
     if location:
         filters.append(Listing.location.ilike(f"%{location}%"))
-        logger.info("Added location filter: location ilike '%%%s%%'", location)
 
     # Price range filters
     if min_price is not None:
         filters.append(Listing.price >= min_price)
-        logger.info("Added min_price filter: price >= %s", min_price)
     if max_price is not None:
         filters.append(Listing.price <= max_price)
-        logger.info("Added max_price filter: price <= %s", max_price)
 
     # Preferences filters
     if pet_friendly is not None:
         filters.append(Listing.preferences.like('%"pet_friendly": true%'))
-        logger.info("Added pet_friendly filter: preferences['pet_friendly'] == %s", pet_friendly)
     if smoking is not None:
         filters.append(Listing.preferences.like(f'%"smoking": {str(smoking).lower()}%'))
-        logger.info("Added smoking filter: preferences['smoking'] == %s", smoking)
     if party_friendly is not None:
         filters.append(Listing.preferences.like(f'%"party_friendly": {str(party_friendly).lower()}%'))
-        logger.info("Added party_friendly filter: preferences['party_friendly'] == %s", party_friendly)
     if vegan is not None:
         filters.append(Listing.preferences.like(f'%"vegan": {str(vegan).lower()}%'))
-        logger.info("Added vegan filter: preferences['vegan'] == %s", vegan)
 
     # Quiet hours filter
     if quiet_hours_start:
         filters.append(Listing.preferences.like(f'%"quiet_hours": {{"start": "{quiet_hours_start}"%'))
-        logger.info("Added quiet_hours_start filter: preferences['quiet_hours']['start'] == %s", quiet_hours_start)
     if quiet_hours_end:
         filters.append(Listing.preferences.like(f'%"quiet_hours": %%"end": "{quiet_hours_end}"%'))
-        logger.info("Added quiet_hours_end filter: preferences['quiet_hours']['end'] == %s", quiet_hours_end)
 
     # Language filter
     if language:
         for lang in language:
             filters.append(Listing.preferences.like(f'%"language": %%"{lang}"%'))
-            logger.info("Added language filter: preferences['language'] includes '%s'", lang)
 
     # Log all filters before query execution
     logger.info("Constructed filters: %s", filters)
@@ -219,5 +197,29 @@ def delete_listing(
     db.commit()
     
     return {"message": f"Listing with ID {listing_id} has been deleted"}
+
+
+@router.post("/groups", response_model=GroupResponse)
+def create_group(
+    group: GroupCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),  # Get the current user
+):
+    # Check if the listing exists
+    listing = db.query(Listing).filter(Listing.listing_id == group.listing_id).first()
+    if not listing:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Listing not found")
+
+    # Create the group with the current user as the owner
+    db_group = Group(
+        name=group.name,
+        description=group.description,
+        listing_id=group.listing_id,
+        owner_id=current_user.user_id  # Set the current user as the owner
+    )
+    db.add(db_group)
+    db.commit()
+    db.refresh(db_group)
+    return db_group
 
 
