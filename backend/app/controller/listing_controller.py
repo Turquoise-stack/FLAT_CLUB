@@ -1,10 +1,10 @@
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import and_, func
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from service.auth import get_current_user, get_user_id
 from schemas.listing_schemas import GroupCreate, GroupResponse, ListingCreate, ListingResponse, ListingUpdateRequest
-from model.client_model import Group, Listing, User
+from model.client_model import Group, GroupMember, Listing, User
 from dependencies import get_db
 import logging
 
@@ -225,9 +225,61 @@ def create_group(
 
 @router.get("/groups/{group_id}", response_model=GroupResponse)
 def get_group_details(group_id: int, db: Session = Depends(get_db)):
-    # Fetch the group details from the database
+    # Fetch the group with its members
+    group = (
+        db.query(Group)
+        .options(joinedload(Group.members).joinedload(GroupMember.user))  # Loadibng members and their user details
+        .filter(Group.group_id == group_id)
+        .first()
+    )
+    if not group:
+        raise HTTPException(status_code=404, detail="Group not found")
+
+    # Manually serializing the members
+    members = [
+        {
+            "user_id": member.user.user_id,
+            "name": member.user.name,
+            "surname": member.user.surname,
+            "username": member.user.username,
+        }
+        for member in group.members
+    ]
+
+    # Return the serialized group with members
+    return {
+        "group_id": group.group_id,
+        "name": group.name,
+        "description": group.description,
+        "listing_id": group.listing_id,
+        "owner_id": group.owner_id,
+        "members": members,
+    }
+
+
+
+@router.post("/groups/{group_id}/join")
+def join_group(group_id: int, db: Session = Depends(get_db), current_user=Depends(get_current_user)):
+    # Check if the group exists
     group = db.query(Group).filter(Group.group_id == group_id).first()
     if not group:
         raise HTTPException(status_code=404, detail="Group not found")
-    return group
 
+    # Check if the user is already a member of the group
+    existing_membership = db.query(GroupMember).filter(
+        GroupMember.group_id == group_id,
+        GroupMember.user_id == current_user.user_id
+    ).first()
+    if existing_membership:
+        raise HTTPException(status_code=400, detail="You are already a member of this group")
+
+    # Add the user to the group
+    group_member = GroupMember(
+        group_id=group_id,
+        user_id=current_user.user_id
+    )
+    db.add(group_member)
+    db.commit()
+    db.refresh(group_member)
+
+    return {"message": f"You have successfully joined the group '{group.name}'"}

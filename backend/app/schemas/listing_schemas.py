@@ -45,17 +45,27 @@ class ListingResponse(BaseModel):
     class Config:
         orm_mode = True  # Allows SQLAlchemy objects to be directly serialized
 
+class GroupMemberResponse(BaseModel):
+    user_id: int
+    name: Optional[str]
+    surname: Optional[str]
+    username: str
+
+    class Config:
+        orm_mode = True
+
 class GroupCreate(BaseModel):
     name: str
     description: Optional[str]
     listing_id: int
 
 class GroupResponse(BaseModel):
-    group_id: int 
+    group_id: int
     name: str
     description: Optional[str]
     listing_id: int
     owner_id: int
+    members: List[GroupMemberResponse]  
 
     class Config:
         orm_mode = True
