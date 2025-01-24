@@ -223,3 +223,11 @@ def create_group(
     return db_group
 
 
+@router.get("/groups/{group_id}", response_model=GroupResponse)
+def get_group_details(group_id: int, db: Session = Depends(get_db)):
+    # Fetch the group details from the database
+    group = db.query(Group).filter(Group.group_id == group_id).first()
+    if not group:
+        raise HTTPException(status_code=404, detail="Group not found")
+    return group
+
