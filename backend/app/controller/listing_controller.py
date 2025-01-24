@@ -3,7 +3,7 @@ from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy import and_, func
 from sqlalchemy.orm import Session, joinedload
 from service.auth import get_current_user, get_user_id
-from schemas.listing_schemas import GroupCreate, GroupResponse, ListingCreate, ListingResponse, ListingUpdateRequest
+from schemas.listing_schemas import GroupCreate, GroupResponse, ListingCreate, ListingResponse, ListingUpdateRequest, UpdateGroupPreferenceRequest
 from model.client_model import Group, GroupMember, Listing, User
 from dependencies import get_db
 import logging
@@ -283,3 +283,26 @@ def join_group(group_id: int, db: Session = Depends(get_db), current_user=Depend
     db.refresh(group_member)
 
     return {"message": f"You have successfully joined the group '{group.name}'"}
+
+@router.patch("/groups/{group_id}/preferences")
+def update_group_preferences(
+    group_id: int,
+    request: UpdateGroupPreferenceRequest,
+    db: Session = Depends(get_db),
+    current_user=Depends(get_current_user),
+):
+    # Fetch the group
+    group = db.query(Group).filter(Group.group_id == group_id).first()
+    if not group:
+        raise HTTPException(status_code=404, detail="Group not found")
+
+    # Check if the current user is authorized (only group owner can update preferences)
+    if group.owner_id != current_user.user_id:
+        raise HTTPException(status_code=403, detail="Not authorized to update preferences")
+
+    # Update the lifestyle preferences
+    group.lifestyle_preference = request.lifestyle_preference.dict()
+    db.commit()
+    db.refresh(group)
+
+    return {"message": "Group preferences updated successfully", "lifestyle_preference": group.lifestyle_preference}

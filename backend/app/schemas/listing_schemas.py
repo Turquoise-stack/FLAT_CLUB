@@ -69,3 +69,20 @@ class GroupResponse(BaseModel):
 
     class Config:
         orm_mode = True
+
+
+class RentDivision(BaseModel):
+    member_id: int
+    percentage: float
+
+class QuietHours(BaseModel):
+    start: str  # Time in HH:MM format
+    end: str    # Time in HH:MM format
+
+class LifestylePreference(BaseModel):
+    rent_division: Optional[Dict[int, float]]  # Keyed by user_id
+    quiet_hours: Optional[QuietHours]
+    ready_to_sign: Optional[List[int]] = []  # List of member IDs ready to sign
+
+class UpdateGroupPreferenceRequest(BaseModel):
+    lifestyle_preference: LifestylePreference
