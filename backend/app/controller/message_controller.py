@@ -1,5 +1,5 @@
 from schemas.message_schemas import DirectMessageRequest, GroupMessageRequest
-from model.client_model import Group, GroupMember, Message, User
+from model.client_model import Group, GroupMember, Message, Notification, User
 from service.auth import get_current_user
 from dependencies import get_db
 from sqlalchemy.sql import text  
@@ -119,39 +119,39 @@ def fetch_group_messages(group_id: int, db: Session = Depends(get_db)):
     ]
 
 
-# @router.get("/notifications")
-# def fetch_notifications(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-#     notifications = db.query(Notification).filter(
-#         Notification.user_id == current_user.user_id
-#     ).order_by(Notification.created_at.desc()).all()
+@router.get("/notifications")
+def fetch_notifications(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    notifications = db.query(Notification).filter(
+        Notification.user_id == current_user.user_id
+    ).order_by(Notification.created_at.desc()).all()
 
-#     return [
-#         {
-#             "notification_id": notification.notification_id,
-#             "content": notification.content,
-#             "created_at": notification.created_at,
-#             "is_read": notification.is_read,
-#         }
-#         for notification in notifications
-#     ]
+    return [
+        {
+            "notification_id": notification.notification_id,
+            "content": notification.content,
+            "created_at": notification.created_at,
+            "is_read": notification.is_read,
+        }
+        for notification in notifications
+    ]
 
 
-# @router.put("/notifications/{notification_id}")
-# def mark_notification_as_read(
-#     notification_id: int,
-#     db: Session = Depends(get_db),
-#     current_user: User = Depends(get_current_user),
-# ):
-#     # Fetch the notification
-#     notification = db.query(Notification).filter(
-#         Notification.notification_id == notification_id,
-#         Notification.user_id == current_user.user_id
-#     ).first()
-#     if not notification:
-#         raise HTTPException(status_code=404, detail="Notification not found")
+@router.put("/notifications/{notification_id}")
+def mark_notification_as_read(
+    notification_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    # Fetch the notification
+    notification = db.query(Notification).filter(
+        Notification.notification_id == notification_id,
+        Notification.user_id == current_user.user_id
+    ).first()
+    if not notification:
+        raise HTTPException(status_code=404, detail="Notification not found")
 
-#     # Mark as read
-#     notification.is_read = True
-#     db.commit()
+    # Mark as read
+    notification.is_read = True
+    db.commit()
 
-#     return {"message": "Notification marked as read"}
+    return {"message": "Notification marked as read"}
