@@ -1,0 +1,1876 @@
+.home,
+.home * {
+  box-sizing: border-box;
+}
+.home {
+    background: #ffffff;
+    min-height: 100vh; /* Full viewport height */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+  }
+  
+.group12 {
+  position: absolute;
+  inset: 0;
+}
+.main {
+    width: 100%;
+    max-width: 1200px; /* Restrict maximum width */
+    margin: 0 auto;
+    text-align: center;
+  }
+.element {
+    width: 100%;
+    background: url("/assets/home.jpg") center center no-repeat;
+    background-size: cover;
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  }
+.link {
+  border-radius: 40px;
+  border-style: solid;
+  border-color: #1f4b43;
+  border-width: 1px;
+  width: 210.38px;
+  height: 40px;
+  position: absolute;
+  left: 50%;
+  translate: -50%;
+  top: 305px;
+}
+.letUsGuideYourHome {
+  color: #1f4b43;
+  text-align: center;
+  font-family: "Roboto-Medium", sans-serif;
+  font-size: 13px;
+  line-height: 38px;
+  font-weight: 500;
+  position: absolute;
+  left: 50%;
+  translate: -50%;
+  top: 1px;
+  width: 158.7px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.heading2BelieveInFindingIt {
+  color: #1f4b43;
+  text-align: center;
+  font-family: "Roboto-Medium", sans-serif;
+  font-size: 60px;
+  line-height: 60px;
+  font-weight: 500;
+  position: absolute;
+  left: 50%;
+  translate: -50%;
+  top: 365px;
+  width: 508.06px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.searchPropertiesForSaleAndToRent {
+  color: #1f4b43;
+  text-align: center;
+  font-family: "Roboto-Medium", sans-serif;
+  font-size: 16px;
+  line-height: 30.4px;
+  font-weight: 500;
+  position: absolute;
+  left: 50%;
+  translate: -50%;
+  top: 444.3px;
+  width: 334.49px;
+  height: 30.4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.form {
+  background: #ffffff;
+  border-radius: 70px;
+  height: 70.5px;
+  position: absolute;
+  right: 615px;
+  left: 615px;
+  top: 525.39px;
+}
+.input {
+  background: #ffffff;
+  border-radius: 50px;
+  width: 89.55%;
+  height: 56.3px;
+  position: absolute;
+  right: 9%;
+  left: 1.45%;
+  top: 7.09px;
+}
+.input2 {
+  height: 20px;
+  position: absolute;
+  right: -532.28px;
+  left: 30.6299991607666px;
+  top: 25.09px;
+  overflow: hidden;
+}
+.enterNameKeywords {
+  color: #1a1a1a;
+  text-align: left;
+  font-family: "Roboto-Regular", sans-serif;
+  font-size: 17px;
+  font-weight: 400;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  width: 183.95px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.button {
+  background: #e7c873;
+  border-radius: 60px;
+  border-style: solid;
+  border-color: #e7c873;
+  border-width: 1px;
+  width: 60px;
+  height: 60.5px;
+  position: absolute;
+  right: 5.02px;
+  top: 50%;
+  translate: 0 -50%;
+}
+.icon {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  left: 20px;
+  top: 39.53px;
+  transform: translate(0px, -20px);
+  overflow: visible;
+}
+.element2 {
+  background: #ffffff;
+  border-radius: 80px;
+  position: absolute;
+  right: 22px;
+  left: 58px;
+  bottom: 732.64px;
+  top: 41.5px;
+}
+.navigationList {
+  width: 693.14px;
+  height: 42.39px;
+  position: absolute;
+  left: 661px;
+  top: 50%;
+  translate: 0 -50%;
+}
+.itemLink {
+  border-radius: 40px;
+  width: 109.05px;
+  height: 42.39px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+}
+.home2 {
+  color: #1a1a1a;
+  text-align: left;
+  font-family: "Roboto-Medium", sans-serif;
+  font-size: 16px;
+  line-height: 30.4px;
+  font-weight: 500;
+  position: absolute;
+  left: 25px;
+  top: 5.3px;
+  width: 47.31px;
+  height: 30.4px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.after {
+  border-style: solid;
+  border-color: radial-gradient(
+    closest-side,
+    rgba(26, 26, 26, 1) 99.99998807907104%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  border-width: 4px 4px 0px 4px;
+  width: 8px;
+  height: 4px;
+  position: absolute;
+  left: 76.05px;
+  top: 17.92px;
+}
+.itemLink2 {
+  border-radius: 40px;
+  width: 122.7px;
+  height: 42.39px;
+  position: absolute;
+  left: 111.05px;
+  top: 0px;
+}
+.listings {
+  color: #1a1a1a;
+  text-align: left;
+  font-family: "Roboto-Medium", sans-serif;
+  font-size: 16px;
+  line-height: 30.4px;
+  font-weight: 500;
+  position: absolute;
+  left: 25px;
+  top: 5.3px;
+  width: 61.02px;
+  height: 30.4px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.after2 {
+  border-style: solid;
+  border-color: radial-gradient(
+    closest-side,
+    rgba(26, 26, 26, 1) 99.99998807907104%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  border-width: 4px 4px 0px 4px;
+  width: 8px;
+  height: 4px;
+  position: absolute;
+  left: 89.7px;
+  top: 17.92px;
+}
+.itemLink3 {
+  border-radius: 40px;
+  width: 134.06px;
+  height: 42.39px;
+  position: absolute;
+  left: 235.75px;
+  top: 0px;
+}
+.groups {
+  color: #1a1a1a;
+  text-align: left;
+  font-family: "Roboto-Medium", sans-serif;
+  font-size: 16px;
+  line-height: 30.4px;
+  font-weight: 500;
+  position: absolute;
+  left: 25px;
+  top: 5.3px;
+  width: 72.29px;
+  height: 30.4px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.after3 {
+  border-style: solid;
+  border-color: radial-gradient(
+    closest-side,
+    rgba(26, 26, 26, 1) 99.99998807907104%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  border-width: 4px 4px 0px 4px;
+  width: 8px;
+  height: 4px;
+  position: absolute;
+  left: 101.06px;
+  top: 17.92px;
+}
+.itemLink4 {
+  border-radius: 40px;
+  width: 98.42px;
+  height: 42.39px;
+  position: absolute;
+  left: 371.81px;
+  top: 0px;
+}
+.blog {
+  color: #1a1a1a;
+  text-align: left;
+  font-family: "Roboto-Medium", sans-serif;
+  font-size: 16px;
+  line-height: 30.4px;
+  font-weight: 500;
+  position: absolute;
+  left: 25px;
+  top: 5.3px;
+  width: 36.65px;
+  height: 30.4px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.after4 {
+  border-style: solid;
+  border-color: radial-gradient(
+    closest-side,
+    rgba(26, 26, 26, 1) 99.99998807907104%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  border-width: 4px 4px 0px 4px;
+  width: 8px;
+  height: 4px;
+  position: absolute;
+  left: 65.43px;
+  top: 17.92px;
+}
+.link2 {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  left: 1431.95px;
+  top: 51.38px;
+  transform-origin: 0 0;
+  transform: rotate(0deg) scale(1, -1);
+  overflow: hidden;
+}
+.link3 {
+  background: #ffffff;
+  border-radius: 20px;
+  border-style: solid;
+  border-color: #1a1a1a;
+  border-width: 1px;
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  left: 1591.78px;
+  top: 21.38px;
+}
+.icon2 {
+  width: 15.95px;
+  height: 16px;
+  position: absolute;
+  left: 12.02px;
+  top: 26.5px;
+  transform: translate(0px, -16px);
+  overflow: visible;
+}
+.link4 {
+  background: #ffffff;
+  border-radius: 50px;
+  border-style: solid;
+  border-color: #1a1a1a;
+  border-width: 1px;
+  width: 148.22px;
+  height: 42.5px;
+  position: absolute;
+  left: 1651.78px;
+  top: 50%;
+  translate: 0 -50%;
+}
+.login {
+  color: #1a1a1a;
+  text-align: center;
+  font-family: "Roboto-Medium", sans-serif;
+  font-size: 15px;
+  line-height: 28.5px;
+  font-weight: 500;
+  position: absolute;
+  left: 26px;
+  top: 50%;
+  translate: 0 -50%;
+  width: 88.56px;
+  height: 28.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.flatClub {
+  color: #3d3d3d;
+  text-align: center;
+  font-family: "Roboto-Medium", sans-serif;
+  font-size: 40px;
+  line-height: 60px;
+  font-weight: 500;
+  position: absolute;
+  left: 89px;
+  top: 18.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.featuredProperties {
+  color: #1a1a1a;
+  text-align: center;
+  font-family: "Roboto-Medium", sans-serif;
+  font-size: 40px;
+  line-height: 52px;
+  font-weight: 500;
+  position: absolute;
+  left: calc(50% - 226.12px);
+  top: 927px;
+  width: 354.59px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.loremIpsumDolorSitAmetConsecteturAdipiscingElit {
+  color: #1a1a1a;
+  text-align: center;
+  font-family: "Roboto-Regular", sans-serif;
+  font-size: 17px;
+  line-height: 32.3px;
+  font-weight: 400;
+  position: absolute;
+  left: calc(50% - 258.17px);
+  top: 984px;
+  width: 418.87px;
+  height: 32.3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.list {
+  height: 45.39px;
+  position: absolute;
+  right: 309px;
+  left: 211px;
+  top: 1056.29px;
+}
+.itemLink5 {
+  background: #fff8f6;
+  border-radius: 40px;
+  border-style: solid;
+  border-color: #1a1a1a;
+  border-width: 1px;
+  width: 139.34px;
+  height: 40.39px;
+  position: absolute;
+  left: 525.09px;
+  top: 0px;
+}
+.allProperties {
+  color: #1a1a1a;
+  text-align: left;
+  font-family: "Roboto-Medium", sans-serif;
+  font-size: 16px;
+  line-height: 30.4px;
+  font-weight: 500;
+  position: absolute;
+  left: 21px;
+  top: 4.3px;
+  width: 97.69px;
+  height: 30.4px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.itemLinkForSale {
+  color: #1a1a1a;
+  text-align: left;
+  font-family: "Roboto-Medium", sans-serif;
+  font-size: 16px;
+  line-height: 30.4px;
+  font-weight: 500;
+  position: absolute;
+  left: 689.44px;
+  top: 4.3px;
+  width: 58.71px;
+  height: 30.4px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.itemLinkForRent {
+  color: #1a1a1a;
+  text-align: left;
+  font-family: "Roboto-Medium", sans-serif;
+  font-size: 16px;
+  line-height: 30.4px;
+  font-weight: 500;
+  position: absolute;
+  left: 793.77px;
+  top: 4.3px;
+  width: 60.52px;
+  height: 30.4px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.article {
+  background: #ffffff;
+  border-radius: 12px;
+  height: 446.66px;
+  position: absolute;
+  right: 1262.34px;
+  left: 211px;
+  top: 1141.68px;
+  overflow: hidden;
+}
+.divPropertyThumbnailWrapper {
+  border-radius: 12px;
+  height: 446.66px;
+  position: absolute;
+  right: 0px;
+  left: 0px;
+  top: 0px;
+  overflow: hidden;
+}
+.linkP11500X500Jpg {
+  width: 446.66px;
+  height: 446.66px;
+  position: absolute;
+  left: 0px;
+  top: 50%;
+  translate: 0 -50%;
+  overflow: hidden;
+  object-fit: cover;
+}
+.link5 {
+  background: #1f4b43;
+  border-radius: 33px;
+  width: 88.36px;
+  height: 33px;
+  position: absolute;
+  left: 20px;
+  top: calc(50% - 199.83px);
+}
+.forSale {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Roboto-Medium", sans-serif;
+  font-size: 13px;
+  line-height: 33px;
+  font-weight: 500;
+  text-transform: uppercase;
+  position: absolute;
+  left: 15px;
+  top: 0px;
+  width: 58.74px;
+  height: 33px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.spanFeaturedProperty {
+  background: #e7c873;
+  border-radius: 33px;
+  width: 92.7px;
+  height: 33px;
+  position: absolute;
+  left: 118.36px;
+  top: calc(50% - 199.83px);
+}
+.featured {
+  color: #1a1a1a;
+  text-align: left;
+  font-family: "Roboto-Medium", sans-serif;
+  font-size: 13px;
+  line-height: 33px;
+  font-weight: 500;
+  text-transform: uppercase;
+  position: absolute;
+  left: 15px;
+  top: 0px;
+  width: 63.09px;
+  height: 33px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.divPropertyInformation {
+  background: #ffffff;
+  border-radius: 8px;
+  width: 91.04%;
+  height: 138.69px;
+  position: absolute;
+  right: 4.48%;
+  left: 4.48%;
+  bottom: 20px;
+}
+.heading2LinkLuxuryFamilyHome {
+  color: #1a1a1a;
+  text-align: left;
+  font-family: "Roboto-Medium", sans-serif;
+  font-size: 19px;
+  line-height: 22.8px;
+  font-weight: 500;
+  position: absolute;
+  left: 20px;
+  top: 19.1px;
+  width: 173.64px;
+  height: 22.8px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.icon3 {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  left: 20px;
+  top: 74.06px;
+  transform: translate(0px, -20px);
+  overflow: visible;
+}
+.link1800181879thSt {
+  color: #1a1a1a;
+  text-align: left;
+  font-family: "Roboto-Regular", sans-serif;
+  font-size: 16px;
+  line-height: 30.4px;
+  font-weight: 400;
+  position: absolute;
+  left: 48.97px;
+  top: 49.1px;
+  width: 131.24px;
+  height: 30.4px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.two195000Zl {
+  color: #eb664e;
+  text-align: left;
+  font-family: "Roboto-SemiBold", sans-serif;
+  font-size: 21px;
+  line-height: 31.5px;
+  font-weight: 600;
+  position: absolute;
+  left: 20px;
+  top: 86.47px;
+  width: 149px;
+  height: 25px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.article2 {
+  background: #ffffff;
+  border-radius: 12px;
+  height: 446.66px;
+  position: absolute;
+  right: 785.68px;
+  left: 687.659912109375px;
+  top: 1141.68px;
+  overflow: hidden;
+}
+.linkP13500X500Jpg {
+  width: 446.66px;
+  height: 446.66px;
+  position: absolute;
+  left: 0px;
+  top: 50%;
+  translate: 0 -50%;
+  overflow: hidden;
+  object-fit: cover;
+}
+.forRent {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Roboto-Medium", sans-serif;
+  font-size: 13px;
+  line-height: 33px;
+  font-weight: 500;
+  text-transform: uppercase;
+  position: absolute;
+  left: 15.34px;
+  top: -0.06px;
+  width: 73px;
+  height: 33px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.heading2LinkSkyperPoolApartment {
+  color: #1a1a1a;
+  text-align: left;
+  font-family: "Roboto-Medium", sans-serif;
+  font-size: 19px;
+  line-height: 22.8px;
+  font-weight: 500;
+  position: absolute;
+  left: 20px;
+  top: 19.1px;
+  width: 196.79px;
+  height: 22.8px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.icon4 {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  left: 20px;
+  top: 74.06px;
+  transform: translate(0px, -20px);
+  overflow: visible;
+}
+.link1020BloomingdaleAve {
+  color: #1a1a1a;
+  text-align: left;
+  font-family: "Roboto-Regular", sans-serif;
+  font-size: 16px;
+  line-height: 30.4px;
+  font-weight: 400;
+  position: absolute;
+  left: 48.97px;
+  top: 49.1px;
+  width: 168.25px;
+  height: 30.4px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.group3 {
+  position: absolute;
+  inset: 0;
+}
+.five000Zl {
+  color: #eb664e;
+  text-align: left;
+  font-family: "Roboto-SemiBold", sans-serif;
+  font-size: 21px;
+  line-height: 31.5px;
+  font-weight: 600;
+  position: absolute;
+  left: 17.34px;
+  top: 87.47px;
+  width: 71px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.month {
+  color: #eb664e;
+  text-align: left;
+  font-family: "Roboto-Regular", sans-serif;
+  font-size: 14.699999809265137px;
+  line-height: 22.05px;
+  font-weight: 400;
+  position: absolute;
+  left: 88.34px;
+  top: 94.47px;
+  width: 48.65px;
+  height: 22.05px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.article3 {
+  background: #ffffff;
+  border-radius: 12px;
+  height: 446.66px;
+  position: absolute;
+  right: 309.03px;
+  left: 1164.31005859375px;
+  top: 1141.68px;
+  overflow: hidden;
+}
+.linkP15500X500Jpg {
+  width: 446.66px;
+  height: 446.66px;
+  position: absolute;
+  left: 0px;
+  top: 50%;
+  translate: 0 -50%;
+  overflow: hidden;
+  object-fit: cover;
+}
+.link6 {
+  background: #1f4b43;
+  border-radius: 33px;
+  width: 89.88px;
+  height: 33px;
+  position: absolute;
+  left: 20px;
+  top: calc(50% - 199.83px);
+}
+.forRent2 {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Roboto-Medium", sans-serif;
+  font-size: 13px;
+  line-height: 33px;
+  font-weight: 500;
+  text-transform: uppercase;
+  position: absolute;
+  left: 15px;
+  top: 0px;
+  width: 60.26px;
+  height: 33px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.heading2LinkNorthDillardStreet {
+  color: #1a1a1a;
+  text-align: left;
+  font-family: "Roboto-Medium", sans-serif;
+  font-size: 19px;
+  line-height: 22.8px;
+  font-weight: 500;
+  position: absolute;
+  left: 20px;
+  top: 19.1px;
+  width: 163.6px;
+  height: 22.8px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.icon5 {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  left: 20px;
+  top: 74.06px;
+  transform: translate(0px, -20px);
+  overflow: visible;
+}
+.link4330BellShoalsRd {
+  color: #1a1a1a;
+  text-align: left;
+  font-family: "Roboto-Regular", sans-serif;
+  font-size: 16px;
+  line-height: 30.4px;
+  font-weight: 400;
+  position: absolute;
+  left: 48.97px;
+  top: 49.1px;
+  width: 141.48px;
+  height: 30.4px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.five000Zl2 {
+  color: #eb664e;
+  text-align: left;
+  font-family: "Roboto-SemiBold", sans-serif;
+  font-size: 21px;
+  line-height: 31.5px;
+  font-weight: 600;
+  position: absolute;
+  left: 19.69px;
+  top: 91.47px;
+  width: 71px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.month2 {
+  color: #eb664e;
+  text-align: left;
+  font-family: "Roboto-Regular", sans-serif;
+  font-size: 14.699999809265137px;
+  line-height: 22.05px;
+  font-weight: 400;
+  position: absolute;
+  left: 90.69px;
+  top: 98.47px;
+  width: 48.65px;
+  height: 22.05px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.article4 {
+  background: #ffffff;
+  border-radius: 12px;
+  height: 446.66px;
+  position: absolute;
+  right: 1262.34px;
+  left: 211px;
+  top: 1618.34px;
+  overflow: hidden;
+}
+.linkP16500X500Jpg {
+  width: 446.66px;
+  height: 446.66px;
+  position: absolute;
+  left: 0px;
+  top: 50%;
+  translate: 0 -50%;
+  overflow: hidden;
+  object-fit: cover;
+}
+.heading2LinkEatonGarthPenthouse {
+  color: #1a1a1a;
+  text-align: left;
+  font-family: "Roboto-Medium", sans-serif;
+  font-size: 19px;
+  line-height: 22.8px;
+  font-weight: 500;
+  position: absolute;
+  left: 20px;
+  top: 19.1px;
+  width: 196.52px;
+  height: 22.8px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.icon6 {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  left: 20px;
+  top: 74.06px;
+  transform: translate(0px, -20px);
+  overflow: visible;
+}
+.link772218thAveBrooklyn {
+  color: #1a1a1a;
+  text-align: left;
+  font-family: "Roboto-Regular", sans-serif;
+  font-size: 16px;
+  line-height: 30.4px;
+  font-weight: 400;
+  position: absolute;
+  left: 48.97px;
+  top: 49.09px;
+  width: 171.33px;
+  height: 30.4px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.group4 {
+  position: absolute;
+  inset: 0;
+}
+.five000Zl3 {
+  color: #eb664e;
+  text-align: left;
+  font-family: "Roboto-SemiBold", sans-serif;
+  font-size: 21px;
+  line-height: 31.5px;
+  font-weight: 600;
+  position: absolute;
+  left: 20px;
+  top: 91.31px;
+  width: 71px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.month3 {
+  color: #eb664e;
+  text-align: left;
+  font-family: "Roboto-Regular", sans-serif;
+  font-size: 14.699999809265137px;
+  line-height: 22.05px;
+  font-weight: 400;
+  position: absolute;
+  left: 91px;
+  top: 98.31px;
+  width: 48.65px;
+  height: 22.05px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.article5 {
+  background: #ffffff;
+  border-radius: 12px;
+  height: 446.66px;
+  position: absolute;
+  right: 785.68px;
+  left: 687.659912109375px;
+  top: 1618.34px;
+  overflow: hidden;
+}
+.linkP17500X500Jpg {
+  width: 446.66px;
+  height: 446.66px;
+  position: absolute;
+  left: 0px;
+  top: 50%;
+  translate: 0 -50%;
+  overflow: hidden;
+  object-fit: cover;
+}
+.spanFeaturedProperty2 {
+  background: #e7c873;
+  border-radius: 33px;
+  width: 92.7px;
+  height: 33px;
+  position: absolute;
+  left: 119.87px;
+  top: calc(50% - 199.83px);
+}
+.heading2LinkNewApartmentNiceWiew {
+  color: #1a1a1a;
+  text-align: left;
+  font-family: "Roboto-Medium", sans-serif;
+  font-size: 19px;
+  line-height: 22.8px;
+  font-weight: 500;
+  position: absolute;
+  left: 20px;
+  top: 19.1px;
+  width: 227.01px;
+  height: 22.8px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.icon7 {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  left: 20px;
+  top: 74.06px;
+  transform: translate(0px, -20px);
+  overflow: visible;
+}
+.link42AvenueOBrooklyn {
+  color: #1a1a1a;
+  text-align: left;
+  font-family: "Roboto-Regular", sans-serif;
+  font-size: 16px;
+  line-height: 30.4px;
+  font-weight: 400;
+  position: absolute;
+  left: 48.97px;
+  top: 49.09px;
+  width: 157.68px;
+  height: 30.4px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.six000Zl {
+  color: #eb664e;
+  text-align: left;
+  font-family: "Roboto-SemiBold", sans-serif;
+  font-size: 21px;
+  line-height: 31.5px;
+  font-weight: 600;
+  position: absolute;
+  left: 20.34px;
+  top: 99.31px;
+  width: 71px;
+  height: 16.24px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.month4 {
+  color: #eb664e;
+  text-align: left;
+  font-family: "Roboto-Regular", sans-serif;
+  font-size: 14.699999809265137px;
+  line-height: 22.05px;
+  font-weight: 400;
+  position: absolute;
+  left: 91.34px;
+  top: 103.37px;
+  width: 48.65px;
+  height: 12.79px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.article6 {
+  background: #ffffff;
+  border-radius: 12px;
+  height: 446.66px;
+  position: absolute;
+  right: 309.03px;
+  left: 1164.31005859375px;
+  top: 1618.34px;
+  overflow: hidden;
+}
+.linkP18500X500Jpg {
+  width: 446.66px;
+  height: 446.66px;
+  position: absolute;
+  left: 0px;
+  top: 50%;
+  translate: 0 -50%;
+  overflow: hidden;
+  object-fit: cover;
+}
+.heading2LinkDiamondManorApartment {
+  color: #1a1a1a;
+  text-align: left;
+  font-family: "Roboto-Medium", sans-serif;
+  font-size: 19px;
+  line-height: 22.8px;
+  font-weight: 500;
+  position: absolute;
+  left: 20px;
+  top: 19.1px;
+  width: 231.27px;
+  height: 22.8px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.icon8 {
+  width: 20px;
+  height: 20px;
+  position: absolute;
+  left: 20px;
+  top: 74.06px;
+  transform: translate(0px, -20px);
+  overflow: visible;
+}
+.link780220thAveBrooklyn {
+  color: #1a1a1a;
+  text-align: left;
+  font-family: "Roboto-Regular", sans-serif;
+  font-size: 16px;
+  line-height: 30.4px;
+  font-weight: 400;
+  position: absolute;
+  left: 49.97px;
+  top: 49.09px;
+  width: 171.33px;
+  height: 30.4px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.five000Zl4 {
+  color: #eb664e;
+  text-align: left;
+  font-family: "Roboto-SemiBold", sans-serif;
+  font-size: 21px;
+  line-height: 31.5px;
+  font-weight: 600;
+  position: absolute;
+  left: 19.69px;
+  top: 91.81px;
+  width: 71px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.month5 {
+  color: #eb664e;
+  text-align: left;
+  font-family: "Roboto-Regular", sans-serif;
+  font-size: 14.699999809265137px;
+  line-height: 22.05px;
+  font-weight: 400;
+  position: absolute;
+  left: 90.69px;
+  top: 98.81px;
+  width: 48.65px;
+  height: 22.05px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.link7 {
+  background: #e7c873;
+  border-radius: 60px;
+  width: 180.63px;
+  height: 54px;
+  position: absolute;
+  left: calc(50% - 139.31px);
+  top: 2115px;
+}
+.seeAllListing {
+  color: #1a1a1a;
+  text-align: center;
+  font-family: "Roboto-Medium", sans-serif;
+  font-size: 15px;
+  line-height: 54px;
+  font-weight: 500;
+  position: absolute;
+  left: calc(50% - 60.32px);
+  top: 0px;
+  width: 95.98px;
+  height: 54px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.svg {
+  width: 15px;
+  height: 12.84px;
+  position: absolute;
+  left: calc(50% - -45.3px);
+  top: 50%;
+  translate: 0 -50%;
+  overflow: visible;
+}
+.element3 {
+  background: #f7f7f7;
+  width: 1920px;
+  height: 279.3px;
+  position: absolute;
+  left: 50%;
+  translate: -50%;
+  top: 2232px;
+}
+.heading2FindPropertiesInTheseCities {
+  color: #1a1a1a;
+  text-align: center;
+  font-family: "Roboto-Medium", sans-serif;
+  font-size: 40px;
+  line-height: 52px;
+  font-weight: 500;
+  position: absolute;
+  left: 50%;
+  translate: -50%;
+  top: 165px;
+  width: 546.93px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.loremIpsumDolorSitAmetConsecteturAdipiscingElit2 {
+  color: #1a1a1a;
+  text-align: center;
+  font-family: "Roboto-Regular", sans-serif;
+  font-size: 17px;
+  line-height: 32.3px;
+  font-weight: 400;
+  position: absolute;
+  left: 50%;
+  translate: -50%;
+  top: 222px;
+  width: 418.87px;
+  height: 32.3px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.element4 {
+  background: #f7f7f7;
+  width: 1920px;
+  height: 734.34px;
+  position: absolute;
+  left: 50%;
+  translate: -50%;
+  top: 2508px;
+}
+.divSlickList {
+  height: 494.34px;
+  position: absolute;
+  right: 45px;
+  left: 45px;
+  top: 15px;
+  overflow: hidden;
+}
+.tabpanelLink {
+  border-radius: 16px;
+  height: 474.34px;
+  position: absolute;
+  right: 1479px;
+  left: 15px;
+  top: 0px;
+  overflow: hidden;
+}
+.before {
+  background: linear-gradient(
+    180deg,
+    rgba(26, 26, 26, 0.8) 0%,
+    rgba(26, 26, 26, 0.1) 60.00000238418579%,
+    rgba(0, 0, 0, 0) 100%
+  );
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  right: 0%;
+  left: 0%;
+  bottom: 0%;
+  top: 0%;
+}
+.frame1 {
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  left: 29px;
+  top: 5.33px;
+  overflow: hidden;
+}
+.heading4Chicago {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Roboto-Medium", sans-serif;
+  font-size: 19px;
+  line-height: 22.8px;
+  font-weight: 500;
+  position: absolute;
+  left: 40px;
+  top: 40px;
+  width: 69.94px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.one20Properties {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Roboto-Regular", sans-serif;
+  font-size: 15px;
+  line-height: 28.5px;
+  font-weight: 400;
+  position: absolute;
+  left: 40px;
+  top: 67.33px;
+  width: 111px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.tabpanelLink2 {
+  border-radius: 16px;
+  height: 474.34px;
+  position: absolute;
+  right: 1113px;
+  left: 381px;
+  top: 0px;
+  overflow: hidden;
+}
+.h23Jpg {
+  width: 336px;
+  height: 474.35px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  overflow: hidden;
+}
+.six60KatedraWMikoAjaFotUmElblag1 {
+  width: 336px;
+  height: 484px;
+  position: absolute;
+  left: 0px;
+  top: 0.33px;
+  object-fit: cover;
+}
+.heading4LosAngeles {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Roboto-Medium", sans-serif;
+  font-size: 19px;
+  line-height: 22.8px;
+  font-weight: 500;
+  position: absolute;
+  left: 40px;
+  top: 40px;
+  width: 104.6px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.two1Property {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Roboto-Regular", sans-serif;
+  font-size: 15px;
+  line-height: 28.5px;
+  font-weight: 400;
+  position: absolute;
+  left: 40px;
+  top: 67.33px;
+  width: 91px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.tabpanelLink3 {
+  border-radius: 16px;
+  height: 474.34px;
+  position: absolute;
+  right: 747px;
+  left: 747px;
+  top: 0px;
+  overflow: hidden;
+}
+.h24Jpg {
+  width: 336px;
+  height: 474.35px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  overflow: hidden;
+}
+.adobeStock1299427551 {
+  width: 336px;
+  height: 501px;
+  position: absolute;
+  left: 0px;
+  top: 0.33px;
+  object-fit: cover;
+}
+.heading4Miami {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Roboto-Medium", sans-serif;
+  font-size: 19px;
+  line-height: 22.8px;
+  font-weight: 500;
+  position: absolute;
+  left: 40px;
+  top: 40.33px;
+  width: 81px;
+  height: 21px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.seven2Properties {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Roboto-Regular", sans-serif;
+  font-size: 15px;
+  line-height: 28.5px;
+  font-weight: 400;
+  position: absolute;
+  left: 40px;
+  top: 67.33px;
+  width: 104px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.tabpanelLink4 {
+  border-radius: 16px;
+  height: 474.34px;
+  position: absolute;
+  right: 381px;
+  left: 1113px;
+  top: 0px;
+  overflow: hidden;
+}
+.h25Jpg {
+  width: 336px;
+  height: 474.35px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  overflow: hidden;
+}
+.krk1 {
+  width: 336px;
+  height: 486px;
+  position: absolute;
+  left: 0px;
+  top: -11.67px;
+  object-fit: cover;
+}
+.heading4Florida {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Roboto-Medium", sans-serif;
+  font-size: 19px;
+  line-height: 22.8px;
+  font-weight: 500;
+  position: absolute;
+  left: 40px;
+  top: 40.33px;
+  width: 93px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.nine3Properties {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Roboto-Regular", sans-serif;
+  font-size: 15px;
+  line-height: 28.5px;
+  font-weight: 400;
+  position: absolute;
+  left: 40px;
+  top: 67.33px;
+  width: 101px;
+  height: 21px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.tabpanelLink5 {
+  border-radius: 16px;
+  height: 474.34px;
+  position: absolute;
+  right: 15px;
+  left: 1479px;
+  top: 0px;
+  overflow: hidden;
+}
+.h21Jpg {
+  width: 336px;
+  height: 474.35px;
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  overflow: hidden;
+}
+.wrc1 {
+  width: 336px;
+  height: 474px;
+  position: absolute;
+  left: 0px;
+  top: 0.33px;
+  object-fit: cover;
+}
+.heading4NewYork {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Roboto-Medium", sans-serif;
+  font-size: 19px;
+  line-height: 22.8px;
+  font-weight: 500;
+  position: absolute;
+  left: 40px;
+  top: 40px;
+  width: 81.27px;
+  height: 22px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.six8Properties {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Roboto-Regular", sans-serif;
+  font-size: 15px;
+  line-height: 28.5px;
+  font-weight: 400;
+  position: absolute;
+  left: 40px;
+  top: 67.33px;
+  width: 99px;
+  height: 21px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.tablist {
+  height: 60px;
+  position: absolute;
+  right: 45px;
+  left: 45px;
+  top: 509.35px;
+}
+.heading2 {
+  height: 104px;
+  position: absolute;
+  right: 260px;
+  left: 1189.5px;
+  top: 4237.84px;
+}
+.element5 {
+  background: #1f4b43;
+  width: 1920px;
+  height: 778.8px;
+  position: absolute;
+  left: 50%;
+  translate: -50%;
+  top: 3242px;
+}
+.divEConInner {
+  width: 1710px;
+  position: absolute;
+  left: 50%;
+  translate: -50%;
+  bottom: 0px;
+  top: 0px;
+}
+.divElementorElement {
+  border-style: solid;
+  border-color: rgba(255, 255, 255, 0.08);
+  border-width: 0px 0px 1px 0px;
+  position: absolute;
+  right: 0px;
+  left: 0px;
+  bottom: 611.8px;
+  top: 0px;
+}
+.flatClub2 {
+  color: #ffffff;
+  text-align: center;
+  font-family: "Roboto-Regular", sans-serif;
+  font-size: 64px;
+  line-height: 32.3px;
+  font-weight: 400;
+  position: absolute;
+  left: 0px;
+  top: 107px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.link8 {
+  background: #222121;
+  border-radius: 25px;
+  width: 50px;
+  height: 50px;
+  position: absolute;
+  left: 830px;
+  bottom: 104.45px;
+}
+.svg2 {
+  width: 11px;
+  height: 13px;
+  position: absolute;
+  left: 50%;
+  translate: -50% -50%;
+  top: 50%;
+  overflow: visible;
+}
+.form2 {
+  border-style: solid;
+  border-color: rgba(255, 255, 255, 0.08);
+  border-width: 0px 0px 1px 0px;
+  height: 57px;
+  position: absolute;
+  right: 1325px;
+  left: 15px;
+  top: 316px;
+}
+.list2 {
+  height: 221px;
+  position: absolute;
+  right: 1010.55px;
+  left: 520px;
+  top: 314.79px;
+}
+.heading2QuickLinks {
+  color: rgba(255, 255, 255, 0.47);
+  text-align: left;
+  font-family: "Roboto-Medium", sans-serif;
+  font-size: 19px;
+  line-height: 22.8px;
+  font-weight: 500;
+  position: absolute;
+  left: 749.45px;
+  top: 262px;
+  width: 98.9px;
+  height: 22.8px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.list3 {
+  height: 259.5px;
+  position: absolute;
+  right: 797.49px;
+  left: 749.4500122070312px;
+  top: 314.79px;
+}
+.itemLinkAbout {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Roboto-Regular", sans-serif;
+  font-size: 15px;
+  line-height: 28.5px;
+  font-weight: 400;
+  position: absolute;
+  left: 0px;
+  top: -0.25px;
+  width: 40.26px;
+  height: 28.5px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.itemLinkContact {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Roboto-Regular", sans-serif;
+  font-size: 15px;
+  line-height: 28.5px;
+  font-weight: 400;
+  position: absolute;
+  left: 0px;
+  top: 38.25px;
+  width: 52.77px;
+  height: 28.5px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.itemLinkFaqS {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Roboto-Regular", sans-serif;
+  font-size: 15px;
+  line-height: 28.5px;
+  font-weight: 400;
+  position: absolute;
+  left: 0px;
+  top: 76.75px;
+  width: 37.29px;
+  height: 28.5px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.itemLinkBlog {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Roboto-Regular", sans-serif;
+  font-size: 15px;
+  line-height: 28.5px;
+  font-weight: 400;
+  position: absolute;
+  left: 0px;
+  top: 115.25px;
+  width: 30.33px;
+  height: 28.5px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.itemLinkPricingPlans {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Roboto-Regular", sans-serif;
+  font-size: 15px;
+  line-height: 28.5px;
+  font-weight: 400;
+  position: absolute;
+  left: 0px;
+  top: 153.75px;
+  width: 87.69px;
+  height: 28.5px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.itemLinkPrivacyPolicy {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Roboto-Regular", sans-serif;
+  font-size: 15px;
+  line-height: 28.5px;
+  font-weight: 400;
+  position: absolute;
+  left: 0px;
+  top: 192.25px;
+  width: 92.65px;
+  height: 28.5px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.itemLinkTermsConditions {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Roboto-Regular", sans-serif;
+  font-size: 15px;
+  line-height: 28.5px;
+  font-weight: 400;
+  position: absolute;
+  left: 0px;
+  top: 230.75px;
+  width: 130.99px;
+  height: 28.5px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.heading2ContactUs {
+  color: rgba(255, 255, 255, 0.47);
+  text-align: left;
+  font-family: "Roboto-Medium", sans-serif;
+  font-size: 19px;
+  line-height: 19px;
+  font-weight: 500;
+  position: absolute;
+  left: 962.52px;
+  top: 262px;
+  width: 93.92px;
+  height: 19px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.hiJusthomeCom1234567890 {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Roboto-Regular", sans-serif;
+  font-size: 15px;
+  line-height: 28.5px;
+  font-weight: 400;
+  position: absolute;
+  left: 962.52px;
+  top: 312.75px;
+  width: 121.48px;
+  height: 57px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.heading2OurAddress {
+  color: rgba(255, 255, 255, 0.47);
+  text-align: left;
+  font-family: "Roboto-Medium", sans-serif;
+  font-size: 19px;
+  line-height: 19px;
+  font-weight: 500;
+  position: absolute;
+  left: 1223.34px;
+  top: 262px;
+  width: 105.86px;
+  height: 19px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.nine9FifthAvenue3rdFloorSanFranciscoCa1980 {
+  color: #ffffff;
+  text-align: left;
+  font-family: "Roboto-Regular", sans-serif;
+  font-size: 15px;
+  line-height: 28.5px;
+  font-weight: 400;
+  position: absolute;
+  left: 1223.34px;
+  top: 312.75px;
+  width: 170.13px;
+  height: 57px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}
+.divElementorElement2 {
+  border-style: solid;
+  border-color: rgba(255, 255, 255, 0.08);
+  border-width: 1px 0px 0px 0px;
+  position: absolute;
+  right: 0px;
+  left: 0px;
+  bottom: 0.01px;
+  top: 669.2899780273438px;
+}
+.copyright2024FlatClub {
+  color: #ffffff;
+  text-align: center;
+  font-family: "Roboto-Regular", sans-serif;
+  font-size: 15px;
+  line-height: 28.5px;
+  font-weight: 400;
+  position: absolute;
+  left: 50%;
+  translate: -50%;
+  top: 41px;
+  width: 194.49px;
+  height: 28.5px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

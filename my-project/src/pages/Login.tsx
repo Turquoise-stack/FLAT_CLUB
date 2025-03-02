@@ -11,16 +11,15 @@ import {
 
 const Login = () => {
   return (
-    <Container
-    //   maxWidth="sm"
+    <Box
       sx={{
-        width: "80vw",
-        height: "90vh", 
+        width: "100vw", // Full viewport width
+        height: "100vh", // Full viewport height
         display: "flex",
         flexDirection: "column",
         justifyContent: "center",
         alignItems: "center",
-        background: "#ffffff",
+        background: "#ffffff", // Background color
       }}
     >
       {/* Logo Section */}
@@ -62,6 +61,7 @@ const Login = () => {
           borderRadius: "16px",
           p: 4,
           width: "100%",
+          maxWidth: "400px", // Optional: Limit the form width
           boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
         }}
       >
@@ -120,7 +120,7 @@ const Login = () => {
           Copyright © 2024. Flat Club
         </Typography>
       </Box>
-    </Container>
+    </Box>
   );
 };
 

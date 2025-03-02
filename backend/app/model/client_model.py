@@ -38,6 +38,7 @@ class User(Base):
     messages_received = relationship("Message", foreign_keys="Message.recipient_id", back_populates="recipient")  
     ratings = relationship("Rating", back_populates="user") 
     media = relationship("Media", back_populates="user")  # Media Uploaded
+    notifications = relationship("Notification", back_populates="user")  
 
 class Listing(Base):
     __tablename__ = "listings"
