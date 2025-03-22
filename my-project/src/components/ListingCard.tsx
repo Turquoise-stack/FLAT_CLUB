@@ -1,42 +1,57 @@
 import React from "react";
-import { Card, CardContent, CardMedia, Typography, Button, Box } from "@mui/material";
+import { Box, Typography, Card, CardMedia } from "@mui/material";
 
-interface ListingProps {
-  title: string;
-  location: string;
-  price: string;
+interface ListingCardProps {
   image: string;
-  description: string;
+  title: string;
+  price: number;
+  groupCount: number;
 }
 
-const ListingCard: React.FC<ListingProps> = ({ title, location, price, image, description }) => {
+const ListingCard: React.FC<ListingCardProps> = ({ image, title, price, groupCount }) => {
   return (
-    <Card sx={{ maxWidth: 350, boxShadow: 3, borderRadius: 2 }}>
-      {/* Listing Image */}
-      <CardMedia component="img" height="200" image={image} alt={title} />
+    <Card
+      sx={{
+        position: "relative",
+        width: 300,
+        height: 350,
+        borderRadius: 3,
+        overflow: "hidden",
+        boxShadow: 3,
+      }}
+    >
+      {/* Background Image */}
+      <CardMedia
+        component="img"
+        height="100%"
+        image={image}
+        alt={title}
+        sx={{ objectFit: "cover" }}
+      />
 
-      <CardContent>
-        {/* Title & Location */}
-        <Typography variant="h6" fontWeight="bold">{title}</Typography>
-        <Typography variant="body2" color="textSecondary">{location}</Typography>
-
-        {/* Price */}
-        <Typography variant="h6" color="primary" sx={{ mt: 1 }}>
-          {price}
+      {/* Overlay Island */}
+      <Box
+        sx={{
+          position: "absolute",
+          bottom: 16,
+          left: 16,
+          right: 16,
+          backgroundColor: "rgba(255, 255, 255, 0.95)",
+          borderRadius: 2,
+          padding: 2,
+          boxShadow: 2,
+        }}
+      >
+        <Typography variant="h6" fontWeight="bold" noWrap>
+          {title}
         </Typography>
-
-        {/* Description */}
-        <Typography variant="body2" sx={{ mt: 1 }}>
-          {description.length > 100 ? description.substring(0, 100) + "..." : description}
+        <Typography variant="body1" color="primary" fontWeight="bold">
+          ${price}
         </Typography>
-
-        {/* View Details Button */}
-        <Box sx={{ mt: 2 }}>
-          <Button variant="contained" fullWidth sx={{ backgroundColor: "#1f4b43", ":hover": { backgroundColor: "#164032" } }}>
-            View Details
-          </Button>
-        </Box>
-      </CardContent>
+        <Typography variant="body2" color="text.secondary">
+          {groupCount} group{groupCount !== 1 ? "s" : ""} created
+        </Typography>
+      </Box>
     </Card>
   );
 };
