@@ -36,7 +36,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   return (
     <Box sx={{
       position: "absolute",
-      top: { xs: "30px", sm: "210px", md: "280x", lg: "270px" }, 
+      top: { xs: "30px", sm: "210px", md: "280x", lg: "390px" }, 
       left: "50%",
       transform: "translateX(-50%)",
       display: "flex",
@@ -103,7 +103,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
         />
       </Box>
 
-        {/* Price Range Section */}
+      {/* Price Range Section */}
       <Box sx={{ display: "flex", gap: 2 }}>
         <TextField
           label="Min Price"
@@ -137,13 +137,11 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
               borderRadius: "19px",
             },
           }}
-          inputProps={{ min: 0 }}
+          inputProps={{ min: 1 }}
         />
       </Box>
 
-
       <Box sx={{ display: "flex", flexDirection: "row", gap: 2, flexWrap: "wrap", justifyContent: "center" }}>
-
       {/* Smoking Toggle Button */}
       <Button
         onClick={() => setSmoking((prev) => (prev === "smoking" ? "non-smoking" : "smoking"))}
@@ -185,8 +183,6 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
       >
         {vegan === "vegan friendly" ? "Vegan Friendly" : "Non-Vegan"}
       </Button>
-
-
 
       {/* Pets Toggle Button */}
       <Button

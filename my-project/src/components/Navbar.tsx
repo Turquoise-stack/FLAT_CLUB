@@ -51,9 +51,9 @@ const Navbar = () => {
                 },          
           }}
         >
-          <Button component={Link} to="/">Home</Button>
-          <Button component={Link} to="/listings">Listings</Button>
-          <Button component={Link} to="/groups">Groups</Button>
+          <Button sx={{color:"black", fontWeight: "bold"}} component={Link} to="/">Home</Button>
+          <Button sx={{color:"black", fontWeight: "bold"}} component={Link} to="/listings">Listings</Button>
+          <Button sx={{color:"black", fontWeight: "bold"}} component={Link} to="/groups">Groups</Button>
         </Box>
 
         <Button

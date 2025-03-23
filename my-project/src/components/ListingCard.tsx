@@ -46,7 +46,7 @@ const ListingCard: React.FC<ListingCardProps> = ({ image, title, price, groupCou
           {title}
         </Typography>
         <Typography variant="body1" color="primary" fontWeight="bold">
-          ${price}
+          {price}zl
         </Typography>
         <Typography variant="body2" color="text.secondary">
           {groupCount} group{groupCount !== 1 ? "s" : ""} created

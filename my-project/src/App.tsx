@@ -11,7 +11,6 @@ const App = () => {
     <Router>
       <Routes>
       <Route path="/" element={<HomeGuest/>} />
-        <Route path="/login" element={<ListingCard image={"/src/assets/card.jpg"} title={""} price={0} groupCount={0} />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
       </Routes>
