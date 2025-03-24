@@ -27,7 +27,7 @@ const ListingGrid: React.FC<ListingGridProps> = ({ listings }) => {
         mt: 5,
       }}
     >
-      <Typography variant="h5" fontWeight="bold" mb={3} align="center" color="black">
+      <Typography variant="h5" fontWeight="medium" mb={3} align="center" color="black">
         Featured Properties
       </Typography>
 

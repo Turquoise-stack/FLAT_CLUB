@@ -1,125 +1,59 @@
-import React from "react";
-import {
-  Box,
-  TextField,
-  Button,
-  Typography,
-  Container,
-  Link,
-  Avatar,
-} from "@mui/material";
+import React, { useState } from "react";
+import AuthCard from "../components/auth/AuthCard";
+import { Box } from "@mui/material";
+import Footer from "../components/Footer";
+import backgroundImg from "../assets/home.jpg";
 
-const Login = () => {
+const Login: React.FC = () => {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+
+  const handleLogin = () => {
+    // call /api/login
+  };
+
+  const fields = [
+    {
+      name: "email",
+      label: "Email",
+      value: email,
+      onChange: (e) => setEmail(e.target.value),
+    },
+    {
+      name: "password",
+      label: "Password",
+      type: "password",
+      value: password,
+      onChange: (e) => setPassword(e.target.value),
+    },
+  ];
+
   return (
     <Box
-      sx={{
-        width: "100vw", // Full viewport width
-        height: "100vh", // Full viewport height
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center",
-        alignItems: "center",
-        background: "#ffffff", // Background color
-      }}
-    >
-      {/* Logo Section */}
-      <Avatar
-        sx={{
-          width: 100,
-          height: 100,
-          background: "#1f4b43",
-          mb: 2,
-        }}
-      >
-        <Typography variant="h5" color="white" fontWeight="bold">
-          FC
-        </Typography>
-      </Avatar>
-      <Typography
-        variant="h4"
-        color="#1f4b43"
-        fontWeight="500"
-        textAlign="center"
-        gutterBottom
-      >
-        Flat Club
-      </Typography>
-      <Typography
-        variant="subtitle1"
-        color="#1f4b43"
-        textAlign="center"
-        mb={4}
-      >
-        Believe in finding it
-      </Typography>
-
-      {/* Login Form */}
-      <Box
-        sx={{
-          background: "rgba(255, 255, 255, 0.3)",
-          backdropFilter: "blur(25px)",
-          borderRadius: "16px",
-          p: 4,
-          width: "100%",
-          maxWidth: "400px", // Optional: Limit the form width
-          boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-        }}
-      >
-        <Typography
-          variant="h6"
-          color="#1f4b43"
-          fontWeight="500"
-          textAlign="center"
-          mb={2}
-        >
-          Login to your Flat Club account
-        </Typography>
-        <TextField
-          label="Email"
-          variant="outlined"
-          fullWidth
-          sx={{ mb: 2 }}
+    sx={{
+      backgroundImage: `url("/src/assets/home.jpg")`, 
+      backgroundSize: "cover",
+      backgroundPosition: "center",
+      backgroundRepeat: "no-repeat",
+      display: "flex",
+      flexDirection: "column",
+      justifyContent: "center",
+      alignItems: "center",
+      textAlign: "center",
+    }}
+  >
+      {/* AuthCard centered in vertical space */}
+      <Box sx={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
+        <AuthCard
+          title="Login"
+          fields={fields}
+          onSubmit={handleLogin}
+          submitLabel="Login"
+          bottomLink={{ text: "Don't have an account? Register", to: "/register" }}
         />
-        <TextField
-          label="Password"
-          type="password"
-          variant="outlined"
-          fullWidth
-          sx={{ mb: 3 }}
-        />
-        <Button
-          variant="contained"
-          fullWidth
-          sx={{
-            backgroundColor: "#1f4b43",
-            ":hover": {
-              backgroundColor: "#164032",
-            },
-          }}
-        >
-          Login
-        </Button>
       </Box>
 
-      {/* Register Section */}
-      <Typography
-        variant="body2"
-        color="#1f4b43"
-        mt={3}
-        textAlign="center"
-      >
-        New here?{" "}
-        <Link href="/register" underline="hover" color="#e7c873">
-          Register
-        </Link>
-      </Typography>
-
-      {/* Footer */}
-      <Box mt={4} textAlign="center">
-        <Typography variant="caption" color="gray">
-          Copyright © 2024. Flat Club
-        </Typography>
-      </Box>
+      <Footer />
     </Box>
   );
 };
