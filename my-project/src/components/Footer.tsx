@@ -15,7 +15,7 @@ const Footer = () => {
         pt: 3,
         pb: 2,
         position: "relative",
-        width: { xs: "40vh", md: "210.5vh" },
+        width: "100%",
         height: "10%",
       }}
     >

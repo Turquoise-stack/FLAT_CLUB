@@ -36,7 +36,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
   return (
     <Box sx={{
       position: "absolute",
-      top: { xs: "30px", sm: "210px", md: "280x", lg: "390px" }, 
+      top: "35%", 
       left: "50%",
       transform: "translateX(-50%)",
       display: "flex",
@@ -54,7 +54,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
           flexDirection: "row",
           boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
           padding: "10px 20px",
-          width: { xs: "250px", sm: "350px", md: "400px" },
+          width: "100%",
         }}
       >
         <TextField
