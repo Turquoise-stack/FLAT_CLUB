@@ -37,22 +37,26 @@ const Register: React.FC = () => {
     <Box
       sx={{
         minHeight: "100vh",
-        width: "100%",
+        width: "100vw",
         backgroundImage: `url(${backgroundImg})`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",
         display: "flex",
         flexDirection: "column",
+        justifyContent: "center",
+        alignItems: "center",
+        px: 2,
       }}
     >
-      <Box sx={{ flex: 1, display: "flex", alignItems: "center", justifyContent: "center" }}>
+      <Box sx={{ flex: 1, width: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
         {step === 1 ? (
           <AuthCard
             title="Register"
             fields={fields}
             onSubmit={handleNext}
             submitLabel="Next"
+            bottomLink={{ text: "Already have an account? Login", to: "/login" }}
           />
         ) : (
           <PreferenceForm

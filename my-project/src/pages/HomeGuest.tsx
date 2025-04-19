@@ -78,7 +78,7 @@ const HomeGuest = () => {
           <SearchBar onSearch={handleSearch} />
         </Box>
 
-        <Container maxWidth="xl">
+        <Box>
           <ListingGrid listings={sampleListings} />
 
           <Typography
@@ -115,7 +115,7 @@ const HomeGuest = () => {
               </Grid>
             ))}
           </Grid>
-        </Container>
+        </Box>
 
         <Footer />
       </Box>

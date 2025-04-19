@@ -23,7 +23,7 @@ const ListingGrid: React.FC<ListingGridProps> = ({ listings }) => {
         boxShadow: 3,
         p: 4,
         mx: "auto",
-        maxWidth: "1400px",
+        maxWidth: "90%",
         mt: 5,
       }}
     >
