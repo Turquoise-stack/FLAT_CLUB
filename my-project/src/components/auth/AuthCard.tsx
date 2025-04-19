@@ -10,24 +10,13 @@ import {
   Link as MuiLink,
 } from "@mui/material";
 
-const FullScreenContainer = styled(Box)({
-  minHeight: "86vh",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  padding: "2rem",
-  boxSizing: "border-box",
-
-});
-
 const GlassCard = styled(Card)(({ theme }) => ({
-  background: "rgba(255, 255, 255, 0.1)",
+  background: "rgba(255, 255, 255, 0.9)",
   backdropFilter: "blur(10px)",
-  WebkitBackdropFilter: "blur(10px)",
   borderRadius: "1.5rem",
   padding: theme.spacing(4),
-  width: "100%",
-  maxWidth: "420px",
+  width: "100%", // Take full width of parent
+  maxWidth: "600px", // Limit on large screens
   boxShadow: "0 8px 32px 0 rgba(31, 38, 135, 0.37)",
   border: "1px solid rgba(255, 255, 255, 0.18)",
   color: "#000",
@@ -74,44 +63,42 @@ const AuthCard: React.FC<AuthCardProps> = ({
   bottomLink,
 }) => {
   return (
-    <FullScreenContainer>
-      <GlassCard>
-        <CardContent>
-          <Typography variant="h5" fontWeight={600} textAlign="center" gutterBottom>
-            {title}
-          </Typography>
-          <Box display="flex" flexDirection="column" gap={2} mt={3}>
-            {fields.map((field) => (
-              <TextField
-                key={field.name}
-                label={field.label}
-                type={field.type || "text"}
-                value={field.value}
-                onChange={field.onChange}
-                fullWidth
-                variant="outlined"
-                InputProps={{
-                  style: {
-                    backgroundColor: "rgba(255, 255, 255, 0.6)",
-                    borderRadius: "0.75rem",
-                  },
-                }}
-              />
-            ))}
-            <FirstButton fullWidth onClick={onSubmit}>
-              {submitLabel}
-            </FirstButton>
-            {bottomLink && (
-              <Typography textAlign="center" variant="body2">
-                <MuiLink href={bottomLink.to} underline="hover" sx={{ color: "#173D36" }}>
-                  {bottomLink.text}
-                </MuiLink>
-              </Typography>
-            )}
-          </Box>
-        </CardContent>
-      </GlassCard>
-    </FullScreenContainer>
+    <GlassCard>
+      <CardContent>
+        <Typography variant="h5" fontWeight={600} textAlign="center" gutterBottom>
+          {title}
+        </Typography>
+        <Box display="flex" flexDirection="column" gap={2} mt={3}>
+          {fields.map((field) => (
+            <TextField
+              key={field.name}
+              label={field.label}
+              type={field.type || "text"}
+              value={field.value}
+              onChange={field.onChange}
+              fullWidth
+              variant="outlined"
+              InputProps={{
+                style: {
+                  backgroundColor: "rgba(255, 255, 255, 0.6)",
+                  borderRadius: "0.75rem",
+                },
+              }}
+            />
+          ))}
+          <FirstButton fullWidth onClick={onSubmit}>
+            {submitLabel}
+          </FirstButton>
+          {bottomLink && (
+            <Typography textAlign="center" variant="body2">
+              <MuiLink href={bottomLink.to} underline="hover" sx={{ color: "#173D36" }}>
+                {bottomLink.text}
+              </MuiLink>
+            </Typography>
+          )}
+        </Box>
+      </CardContent>
+    </GlassCard>
   );
 };
 

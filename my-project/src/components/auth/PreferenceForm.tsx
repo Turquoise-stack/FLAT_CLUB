@@ -100,7 +100,7 @@ const PreferenceForm: React.FC<Props> = ({
   };
 
   return (
-    <Card sx={{ maxWidth: 600, width: "100%", p: 3, borderRadius: 4, backdropFilter: "blur(10px)", background: "rgba(255,255,255,0.05)" }}>
+    <Card sx={{ width: "100%", p: 3, borderRadius: 4, backdropFilter: "blur(10px)", background: "rgba(255,255,255,0.05)" }}>
       <CardContent>
         <Typography variant="h5" gutterBottom>
           Preferences & Pets
