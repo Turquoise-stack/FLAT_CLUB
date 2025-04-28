@@ -6,8 +6,8 @@ import enum
 
 # Status Enum for Listings
 class ListingStatus(enum.Enum):
-    ACTIVE = "active"
-    ARCHIVED = "archived"
+    active = "active"
+    archived = "archived"
 
 class User(Base):
     __tablename__ = "users"
@@ -50,11 +50,11 @@ class Listing(Base):
     price = Column(Float, nullable=False)
     isRental = Column(Boolean, nullable=False)
     location = Column(String, nullable=False)
-    images = Column(Integer)  #   Media table
+    images = Column(JSON, nullable=True)
     preferences = Column(JSON, nullable=True)
     created = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
-    status = Column(Enum(ListingStatus), default=ListingStatus.ACTIVE, nullable=False)
+    status = Column(Enum(ListingStatus), default=ListingStatus.active, nullable=False)
 
     # Relationships
     owner = relationship("User", back_populates="listings")
