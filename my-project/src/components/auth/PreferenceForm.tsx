@@ -17,6 +17,12 @@ import {
   FormControl,
 } from "@mui/material";
 import axios from "axios";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+import { useNavigate } from "react-router-dom";
+
+
+axios.defaults.baseURL = "http://localhost:8000";
 
 const languages = ["English", "French", "German", "Spanish"];
 const nationalities = ["Canadian", "Turkish", "German", "Italian"];
@@ -59,6 +65,16 @@ const PreferenceForm: React.FC<Props> = ({
   const [hasPets, setHasPets] = useState(true);
   const [species, setSpecies] = useState<string[]>(["Cat"]);
 
+  const [loading, setLoading] = useState(false);
+  const [snackbar, setSnackbar] = useState({
+    open: false,
+    message: "",
+    severity: "success" as "success" | "error",
+  });
+  
+  const navigate = useNavigate();
+
+
   const handleSubmit = async () => {
     const registerData = {
       name,
@@ -84,20 +100,31 @@ const PreferenceForm: React.FC<Props> = ({
           end: quietEnd,
         },
       },
-      pets: {
-        has_pets: hasPets,
-        species,
-      },
+      pets: hasPets ? { has_pets: true, species } : null,
+      
     };
-
+  
+    setLoading(true);
+  
     try {
       const res = await axios.post("/api/register", registerData);
-      alert("Registered successfully!");
-    } catch (err) {
-      console.error(err);
-      alert("Registration failed");
+      console.log("Registered successfully", res.data);
+  
+      setSnackbar({ open: true, message: "Registered successfully!", severity: "success" });
+  
+      setTimeout(() => {
+        navigate("/login"); // redirct to login after success
+      }, 1500);
+  
+    } catch (err: any) {
+      console.error(err.response?.data || err.message);
+      setSnackbar({ open: true, message: err.response?.data?.detail || "Registration failed", severity: "error" });
+    } finally {
+      setLoading(false);
     }
   };
+  
+  
 
   return (
     <Card sx={{ width: "100%", p: 3, borderRadius: 4, backdropFilter: "blur(10px)", background: "rgba(255,255,255,0.05)" }}>
@@ -230,6 +257,23 @@ const PreferenceForm: React.FC<Props> = ({
           </Button>
         </Box>
       </CardContent>
+      <Snackbar
+  open={snackbar.open}
+  autoHideDuration={3000}
+  onClose={() => setSnackbar({ ...snackbar, open: false })}
+  anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+>
+  <MuiAlert
+    elevation={6}
+    variant="filled"
+    severity={snackbar.severity}
+    onClose={() => setSnackbar({ ...snackbar, open: false })}
+    sx={{ width: "100%" }}
+  >
+    {snackbar.message}
+  </MuiAlert>
+</Snackbar>
+
     </Card>
   );
 };
