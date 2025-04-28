@@ -1,5 +1,5 @@
 from typing import List, Optional
-from fastapi import APIRouter, Depends, HTTPException, Query, status
+from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile, status
 from sqlalchemy import and_, func
 from sqlalchemy.orm import Session, joinedload
 from service.auth import get_current_user, get_user_id
@@ -7,7 +7,7 @@ from schemas.listing_schemas import GroupCreate, GroupResponse, ListingCreate, L
 from model.client_model import Group, GroupMember, Listing, User
 from dependencies import get_db
 import logging
-
+from fastapi import UploadFile, File, Form
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -15,27 +15,59 @@ logger = logging.getLogger(__name__)
 router = APIRouter()
 
 
+@router.get("/listings", response_model=List[ListingResponse])
+def get_all_listings(db: Session = Depends(get_db)):
+    listings = db.query(Listing).all()
+    formatted_listings = [
+        {
+            **listing.__dict__,
+            "created": listing.created.isoformat(),
+            "updated": listing.updated.isoformat() if listing.updated else None,
+        }
+        for listing in listings
+    ]
+    return formatted_listings
+
 @router.post("/listings", status_code=status.HTTP_201_CREATED)
-def create_listing(
-    listing: ListingCreate, 
-    db: Session = Depends(get_db), 
+async def create_listing(
+    title: str = Form(...),
+    description: str = Form(...),
+    price: float = Form(...),
+    location: str = Form(...),
+    isRental: bool = Form(...),
+    status: Optional[str] = Form("active"),
+    preferences: Optional[str] = Form(None),
+    images: List[UploadFile] = File(None), 
+    db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
-    ):
+):
+    saved_image_paths = []
+    if images:
+        for img in images:
+            file_location = f"uploads/{img.filename}"
+            with open(file_location, "wb") as buffer:
+                buffer.write(await img.read())
+            saved_image_paths.append(file_location)
+
+    import json
+    preferences_data = json.loads(preferences) if preferences else None
 
     new_listing = Listing(
-        title=listing.title,
-        description=listing.description,
-        price=listing.price,
-        location=listing.location,
-        isRental=listing.isRental,
-        status=listing.status,
-        preferences=listing.preferences.dict() if listing.preferences else None, 
-        owner_id=current_user.user_id  # Replace with actual owner_id logic (e.g., from JWT)
+        title=title,
+        description=description,
+        price=price,
+        location=location,
+        isRental=isRental,
+        status=status,
+        preferences=preferences_data,
+        owner_id=current_user.user_id,
+        images=saved_image_paths,
     )
+
     db.add(new_listing)
     db.commit()
     db.refresh(new_listing)
-    
+
     return {"success": True, "data": new_listing}
 
 @router.get("/listings/search", response_model=List[ListingResponse])
@@ -54,17 +86,14 @@ def search_listings(
 ):
     filters = []
     
-    # Location filter
     if location:
         filters.append(Listing.location.ilike(f"%{location}%"))
 
-    # Price range filters
     if min_price is not None:
         filters.append(Listing.price >= min_price)
     if max_price is not None:
         filters.append(Listing.price <= max_price)
 
-    # Preferences filters
     if pet_friendly is not None:
         filters.append(Listing.preferences.like('%"pet_friendly": true%'))
     if smoking is not None:
@@ -74,31 +103,24 @@ def search_listings(
     if vegan is not None:
         filters.append(Listing.preferences.like(f'%"vegan": {str(vegan).lower()}%'))
 
-    # Quiet hours filter
     if quiet_hours_start:
-        filters.append(Listing.preferences.like(f'%"quiet_hours": {{"start": "{quiet_hours_start}"%'))
+        filters.append(Listing.preferences.like(f'%"quiet_hours": "start": "{quiet_hours_start}"%'))
     if quiet_hours_end:
         filters.append(Listing.preferences.like(f'%"quiet_hours": %%"end": "{quiet_hours_end}"%'))
 
-    # Language filter
     if language:
         for lang in language:
             filters.append(Listing.preferences.like(f'%"language": %%"{lang}"%'))
 
-    # Log all filters before query execution
     logger.info("Constructed filters: %s", filters)
 
-    # Query the database
     listings = db.query(Listing).filter(and_(*filters)).all()
 
-    # Log the number of results
     logger.info("Number of listings found: %d", len(listings))
 
-    # Optionally, log each listing for debugging
     for listing in listings:
         logger.debug("Listing found: %s", listing.__dict__)
 
-    # Convert datetime fields to strings
     formatted_listings = [
         {
             **listing.__dict__,
@@ -460,3 +482,29 @@ def get_groups_for_listing(listing_id: int, db: Session = Depends(get_db)):
         })
 
     return serialized_groups
+
+@router.get("/groups", response_model=List[GroupResponse])
+def get_all_groups(db: Session = Depends(get_db)):
+    groups = db.query(Group).all()
+
+    formatted_groups = []
+    for group in groups:
+        formatted_groups.append({
+            "group_id": group.group_id,
+            "name": group.name,
+            "description": group.description,
+            "listing_id": group.listing_id,
+            "owner_id": group.owner_id,
+            "lifestyle_preference": group.lifestyle_preference,
+            "members": [
+                {
+                    "user_id": member.user_id,
+                    "name": member.user.name if member.user else None,
+                    "surname": member.user.surname if member.user else None,
+                    "username": member.user.username if member.user else None,
+                }
+                for member in group.members
+            ],
+        })
+
+    return formatted_groups

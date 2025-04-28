@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks  , Query
+from fastapi import APIRouter, Depends, Form, HTTPException, BackgroundTasks  , Query
 
 from sqlalchemy.orm import Session
 from sqlalchemy import JSON, Column, func
@@ -104,6 +104,21 @@ def password_reset(request: PasswordResetRequest, db: Session = Depends(get_db))
 
     # Fallback for invalid requests
     raise HTTPException(status_code=400, detail="Invalid request. Provide email or token with new password.")
+
+@router.post("/change-password")
+def change_password(
+    current_password: str = Form(...),
+    new_password: str = Form(...),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    if not verify_password(current_password, current_user.password):
+        raise HTTPException(status_code=400, detail="Current password is incorrect")
+
+    current_user.password = get_password_hash(new_password)
+    db.commit()
+
+    return {"message": "Password changed successfully"}
 
 @router.get("/users/{user_id}", response_model=UserProfileResponse)
 def get_user_profile(
