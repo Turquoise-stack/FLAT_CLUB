@@ -1,9 +1,39 @@
 import React, { useState } from "react";
 import { Box, Typography, TextField, Button } from "@mui/material";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleLogin = async () => {
+    setLoading(true);
+    setError("");
+
+    try {
+      const res = await axios.post("/api/login", {
+        email,
+        password,
+      });
+
+      const token = res.data.access_token;
+      console.log("Token received:", token);
+
+      localStorage.setItem("token", token);
+
+      navigate("/");
+    } catch (err: any) {
+      console.error(err.response?.data || err.message);
+      setError(err.response?.data?.detail || "Login failed");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Box
@@ -52,9 +82,18 @@ const Login = () => {
             variant="contained"
             fullWidth
             sx={{ backgroundColor: "#1F4B43", textTransform: "none", fontWeight: "bold" }}
+            onClick={handleLogin}
+            disabled={loading}
           >
-            Login
+            {loading ? "Logging in..." : "Login"}
           </Button>
+
+          {error && (
+            <Typography textAlign="center" color="error" mt={1}>
+              {error}
+            </Typography>
+          )}
+
           <Typography textAlign="center" mt={2}>
             Don't have an account?{" "}
             <a href="/register" style={{ color: "#1F4B43", fontWeight: "bold", textDecoration: "underline" }}>
