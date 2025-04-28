@@ -1,0 +1,97 @@
+import React, { useEffect, useState } from "react";
+import Navbar from "../components/Navbar";
+import SearchBar from "../components/SearchBar";
+import { Box, Container, Button } from "@mui/material";
+import Footer from "../components/Footer";
+import Pagination from "@mui/material/Pagination";
+import { useNavigate } from "react-router-dom";
+import api from "../api/api";
+import GroupList from "../components/GroupList";
+
+const Groups = () => {
+  const [groups, setGroups] = useState<any[]>([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const groupsPerPage = 6;
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchGroups();
+  }, []);
+
+  const fetchGroups = async () => {
+    try {
+      const res = await api.get("/api/groups");
+      setGroups(res.data);
+    } catch (error) {
+      console.error("Failed to fetch groups", error);
+    }
+  };
+
+  const indexOfLastGroup = currentPage * groupsPerPage;
+  const indexOfFirstGroup = indexOfLastGroup - groupsPerPage;
+  const currentGroups = groups.slice(indexOfFirstGroup, indexOfLastGroup);
+
+  const mappedGroups = currentGroups.map(group => ({
+    id: group.group_id,
+    name: group.name,
+    description: group.description || "No description yet",
+    memberCount: group.members ? group.members.length : 0,
+    listingId: group.listing_id,
+  }));
+
+  const handleSearch = (query: string) => {
+    console.log("Searching for:", query);
+  };
+
+  return (
+    <Box sx={{ display: "flex", flexDirection: "column" }}>
+      <Navbar />
+
+      <Box
+        sx={{
+          width: "100vw",
+          height: { xs: '40vh', sm: '50vh', md: '60vh', lg: '70vh' },
+          backgroundImage: `url("/src/assets/waw_search.png")`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          textAlign: "center",
+          px: 2,
+          overflowX: "hidden",
+        }}
+      >
+        <SearchBar onSearch={handleSearch} />
+      </Box>
+
+      <Box sx={{ width: "100%", mt: 3, textAlign: "center" }}>
+        <Button
+          variant="contained"
+          onClick={() => navigate("/creategroup")}
+          sx={{ fontWeight: "bold", backgroundColor: "#1F4B43", ":hover": { backgroundColor: "#164032" } }}
+        >
+          Create Group
+        </Button>
+      </Box>
+
+      <Box sx={{ width: "100%", flexGrow: 1, px: { xs: 2, sm: 4, md: 8 } }}>
+        <GroupList groups={mappedGroups} />
+
+        <Box display="flex" justifyContent="center" mt={3}>
+          <Pagination
+            count={Math.ceil(groups.length / groupsPerPage)}
+            page={currentPage}
+            onChange={(_event, value) => setCurrentPage(value)}
+            color="primary"
+          />
+        </Box>
+      </Box>
+
+      <Footer />
+    </Box>
+  );
+};
+
+export default Groups;
