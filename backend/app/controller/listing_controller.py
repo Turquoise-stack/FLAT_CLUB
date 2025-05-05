@@ -14,6 +14,10 @@ logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
+from pydantic import BaseModel
+
+class MemberActionRequest(BaseModel):
+    user_id: int
 
 @router.get("/listings", response_model=List[ListingResponse])
 def get_all_listings(db: Session = Depends(get_db)):
@@ -222,76 +226,62 @@ def delete_listing(
 
 
 @router.post("/groups", response_model=GroupResponse)
-def create_group(
-    group: GroupCreate,
-    db: Session = Depends(get_db),
-    current_user: User = Depends(get_current_user),
-):
-    # Initialize lifestyle preferences with default values
-    default_preferences = {
-        "rent_division": {},
-        "quiet_hours": {"start": "22:00", "end": "07:00"},
-        "ready_to_sign": [],
-    }
-
-    # Create the group
-    db_group = Group(
+def create_group(group: GroupCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    new_group = Group(
         name=group.name,
         description=group.description,
         listing_id=group.listing_id,
         owner_id=current_user.user_id,
-        lifestyle_preference=default_preferences,  
     )
-    db.add(db_group)
+    db.add(new_group)
     db.commit()
-    db.refresh(db_group)
+    db.refresh(new_group)
 
-    # Add the owner as a member of the group
-    group_member = GroupMember(
-        group_id=db_group.group_id,
+    # ✅ Add leader as ACTIVE member
+    leader_member = GroupMember(
+        group_id=new_group.group_id,
         user_id=current_user.user_id,
+        status="active"
     )
-    db.add(group_member)
+    db.add(leader_member)
     db.commit()
 
+    # Build and return response
     return {
-        "group_id": db_group.group_id,
-        "name": db_group.name,
-        "description": db_group.description,
-        "listing_id": db_group.listing_id,
-        "owner_id": db_group.owner_id,
-        "lifestyle_preference": db_group.lifestyle_preference,
+        "group_id": new_group.group_id,
+        "name": new_group.name,
+        "description": new_group.description,
+        "listing_id": new_group.listing_id,
+        "owner_id": new_group.owner_id,
+        "lifestyle_preference": new_group.lifestyle_preference,
         "members": [
             {
                 "user_id": current_user.user_id,
                 "name": current_user.name,
                 "surname": current_user.surname,
                 "username": current_user.username,
+                "status": "active"
             }
-        ],
+        ]
     }
+
 
 @router.get("/groups/{group_id}", response_model=GroupResponse)
 def get_group_details(group_id: int, db: Session = Depends(get_db)):
-    # Fetch the group with its members
     group = db.query(Group).filter(Group.group_id == group_id).first()
-
     if not group:
         raise HTTPException(status_code=404, detail="Group not found")
 
-    # Manually serialize the members
     members = [
         {
             "user_id": member.user.user_id,
             "name": member.user.name,
             "surname": member.user.surname,
             "username": member.user.username,
+            "status": member.status 
         }
         for member in group.members
     ]
-
-    # Ensure lifestyle_preference has default values
-    lifestyle_preference = group.lifestyle_preference
 
     return {
         "group_id": group.group_id,
@@ -300,8 +290,9 @@ def get_group_details(group_id: int, db: Session = Depends(get_db)):
         "listing_id": group.listing_id,
         "owner_id": group.owner_id,
         "members": members,
-        "lifestyle_preference": lifestyle_preference,
+        "lifestyle_preference": group.lifestyle_preference,
     }
+
 
 
 @router.post("/groups/{group_id}/join")
@@ -337,107 +328,19 @@ def update_group_preferences(
     db: Session = Depends(get_db),
     current_user=Depends(get_current_user),
 ):
-    # Fetch the group
     group = db.query(Group).filter(Group.group_id == group_id).first()
     if not group:
         raise HTTPException(status_code=404, detail="Group not found")
 
-    # Check if the current user is authorized (only group owner can update preferences)
+    # chket if the current user is authorized (only group owner can update preferences)
     if group.owner_id != current_user.user_id:
         raise HTTPException(status_code=403, detail="Not authorized to update preferences")
 
-    # Update the lifestyle preferences
     group.lifestyle_preference = request.lifestyle_preference.dict()
     db.commit()
     db.refresh(group)
 
     return {"message": "Group preferences updated successfully", "lifestyle_preference": group.lifestyle_preference}
-
-@router.post("/groups/{group_id}/ready-to-sign", response_model=GroupResponse)
-def set_ready_to_sign(
-    group_id: int,
-    db: Session = Depends(get_db),
-    current_user=Depends(get_current_user),
-):
-    logger.info(f"Current user: {current_user.user_id}, Group ID: {group_id}")
-
-    group = db.query(Group).filter(Group.group_id == group_id).first()
-    if not group:
-        logger.error(f"Group with ID {group_id} not found")
-        raise HTTPException(status_code=404, detail="Group not found")
-
-    membership = db.query(GroupMember).filter(
-        GroupMember.group_id == group_id, GroupMember.user_id == current_user.user_id
-    ).first()
-    if not membership:
-        raise HTTPException(status_code=403, detail="Not a member of the group")
-
-    # Initialize or update lifestyle preferences
-    if not group.lifestyle_preference:
-        group.lifestyle_preference = {"ready_to_sign": []}
-    elif "ready_to_sign" not in group.lifestyle_preference:
-        group.lifestyle_preference["ready_to_sign"] = []
-
-    if current_user.user_id not in group.lifestyle_preference["ready_to_sign"]:
-        group.lifestyle_preference["ready_to_sign"].append(current_user.user_id)
-
-    try:
-        db.commit()
-        db.refresh(group)
-    except Exception as e:
-        logger.error(f"Database commit failed: {e}")
-        raise HTTPException(status_code=500, detail="Could not update group")
-
-    members = [
-        {
-            "user_id": member.user.user_id,
-            "name": member.user.name,
-            "surname": member.user.surname,
-            "username": member.user.username,
-        }
-        for member in group.members
-    ]
-
-    return {
-        "group_id": group.group_id,
-        "name": group.name,
-        "description": group.description,
-        "listing_id": group.listing_id,
-        "owner_id": group.owner_id,
-        "members": members,
-        "lifestyle_preference": group.lifestyle_preference,
-    }
-
-
-
-@router.post("/groups/{group_id}/forfeit-sign")
-def forfeit_ready_to_sign(
-    group_id: int,
-    db: Session = Depends(get_db),
-    current_user=Depends(get_current_user),
-):
-    # Fetch the group
-    group = db.query(Group).filter(Group.group_id == group_id).first()
-    if not group:
-        raise HTTPException(status_code=404, detail="Group not found")
-
-    # Check if the user is a member of the group
-    membership = db.query(GroupMember).filter(
-        GroupMember.group_id == group_id, GroupMember.user_id == current_user.user_id
-    ).first()
-    if not membership:
-        raise HTTPException(status_code=403, detail="Not a member of the group")
-
-    # Update the ready_to_sign list
-    lifestyle_preferences = group.lifestyle_preference or {}
-    ready_to_sign = lifestyle_preferences.get("ready_to_sign", [])
-    if current_user.user_id in ready_to_sign:
-        ready_to_sign.remove(current_user.user_id)
-        lifestyle_preferences["ready_to_sign"] = ready_to_sign
-        group.lifestyle_preference = lifestyle_preferences
-        db.commit()
-        db.refresh(group)
-
 
 
 @router.get("/listings/{listing_id}/groups", response_model=List[GroupResponse])
@@ -453,7 +356,6 @@ def get_groups_for_listing(listing_id: int, db: Session = Depends(get_db)):
     if not groups:
         raise HTTPException(status_code=404, detail="No groups found for this listing")
 
-    # Serialize each group
     serialized_groups = []
     for group in groups:
         members = [
@@ -502,9 +404,118 @@ def get_all_groups(db: Session = Depends(get_db)):
                     "name": member.user.name if member.user else None,
                     "surname": member.user.surname if member.user else None,
                     "username": member.user.username if member.user else None,
+                    "status": member.status  
+
                 }
                 for member in group.members
             ],
         })
 
     return formatted_groups
+
+
+@router.post("/groups/{group_id}/join-request")
+def join_request(group_id: int, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    group = db.query(Group).filter(Group.group_id == group_id).first()
+    if not group:
+        raise HTTPException(status_code=404, detail="Group not found")
+
+    if group.owner_id == current_user.user_id:
+        raise HTTPException(status_code=400, detail="Group owner cannot request to join their own group.")
+
+    existing = db.query(GroupMember).filter(
+        GroupMember.group_id == group_id,
+        GroupMember.user_id == current_user.user_id
+    ).first()
+
+    if existing:
+        if existing.status == "pending":
+            raise HTTPException(status_code=400, detail="You have already sent a join request.")
+        elif existing.status == "active":
+            raise HTTPException(status_code=400, detail="You are already a member of this group.")
+        else:
+            raise HTTPException(status_code=400, detail="Join request already exists.")
+
+    new_request = GroupMember(group_id=group_id, user_id=current_user.user_id, status="pending")
+    db.add(new_request)
+    db.commit()
+    return {"message": "Join request sent successfully."}
+
+
+@router.post("/groups/{group_id}/approve-member")
+def approve_member(
+    group_id: int,
+    payload: MemberActionRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    user_id = payload.user_id
+
+    group = db.query(Group).filter(Group.group_id == group_id).first()
+    if group.owner_id != current_user.user_id:
+        raise HTTPException(status_code=403, detail="Only owner can approve")
+
+    member = db.query(GroupMember).filter(
+        GroupMember.group_id == group_id,
+        GroupMember.user_id == user_id,
+        GroupMember.status == "pending"
+    ).first()
+    if not member:
+        raise HTTPException(status_code=404, detail="Request not found")
+
+    member.status = "active"
+    db.commit()
+    return {"message": "Member approved"}
+
+
+@router.post("/groups/{group_id}/reject-member")
+def reject_member(
+    group_id: int,
+    payload: MemberActionRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    user_id = payload.user_id
+
+    group = db.query(Group).filter(Group.group_id == group_id).first()
+    if group.owner_id != current_user.user_id:
+        raise HTTPException(status_code=403, detail="Only owner can reject")
+
+    member = db.query(GroupMember).filter(
+        GroupMember.group_id == group_id,
+        GroupMember.user_id == user_id,
+        GroupMember.status == "pending"
+    ).first()
+    if not member:
+        raise HTTPException(status_code=404, detail="Request not found")
+
+    db.delete(member)
+    db.commit()
+    return {"message": "Request rejected"}
+
+
+@router.delete("/groups/{group_id}/remove-member")
+def remove_member(
+    group_id: int,
+    payload: MemberActionRequest,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    user_id = payload.user_id
+
+    group = db.query(Group).filter(Group.group_id == group_id).first()
+    if group.owner_id != current_user.user_id:
+        raise HTTPException(status_code=403, detail="only owner can remove members")
+
+    member = db.query(GroupMember).filter(
+        GroupMember.group_id == group_id,
+        GroupMember.user_id == user_id,
+        GroupMember.status == "active"
+    ).first()
+    if not member:
+        raise HTTPException(status_code=404, detail="Member not found")
+
+    db.delete(member)
+    db.commit()
+    return {"message": "Meber removed"}
+
