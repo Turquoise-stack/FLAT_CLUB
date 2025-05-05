@@ -60,7 +60,7 @@ def login(request: LoginRequest, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Invalid credentials")
     
     # Create a jwt token
-    token = create_access_token({"sub": user.email})
+    token = create_access_token({"sub": str(user.user_id)})
     return {"access_token": token, "token_type": "bearer"}
 
 
