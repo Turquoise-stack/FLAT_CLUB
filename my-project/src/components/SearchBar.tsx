@@ -1,50 +1,58 @@
 import React, { useState } from "react";
-import { TextField, Box, Button, FormControl, Select, MenuItem, Typography, Slider } from "@mui/material";
-import { Autocomplete } from "@mui/material";
+import { TextField, Box, Button, Autocomplete } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
-interface SearchBarProps {
-  onSearch: (query: string) => void;
+interface SearchFilters {
+  location?: string;
+  min_price?: number;
+  max_price?: number;
+  smoking?: boolean;
+  vegan?: boolean;
+  pet_friendly?: boolean;
+  party_friendly?: boolean;
 }
 
-const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [partyFriendly, setPartyFriendly] =  useState<string | null>(null);
-  const [smoking, setSmoking] = useState<string | null>(null);
-  const [petFriendly, setPetFriendly] = useState<string | null>(null);
-  const [vegan, setVegan] = useState<string | null>(null);
+const SearchBar = () => {
+  const navigate = useNavigate();
+
   const [location, setLocation] = useState<string>("");
-  const [priceRange, setPriceRange] = useState<number[]>([1000, 5000]);
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
-  
+  const [smoking, setSmoking] = useState<string | null>(null);
+  const [vegan, setVegan] = useState<string | null>(null);
+  const [petFriendly, setPetFriendly] = useState<string | null>(null);
+  const [partyFriendly, setPartyFriendly] = useState<string | null>(null);
+
   const cityOptions = ["Warsaw", "Elblag", "Krakow", "Gdansk", "Wroclaw", "Poznan", "Lodz", "Lublin"];
 
-  const handleSliderChange = (_: Event, newValue: number | number[]) => {
-    setPriceRange(newValue as number[]);
-  };
+  const handleSubmit = () => {
+    const filters: SearchFilters = {
+      location,
+      min_price: minPrice ? Number(minPrice) : undefined,
+      max_price: maxPrice ? Number(maxPrice) : undefined,
+      smoking: smoking === "smoking",
+      vegan: vegan === "vegan friendly",
+      pet_friendly: petFriendly === "pet friendly",
+      party_friendly: partyFriendly === "party friendly",
+    };
 
-  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(e.target.value);
-  };
-
-  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter") {
-      onSearch(searchQuery);
-    }
+    navigate("/search-results", { state: { filters } });
   };
 
   return (
-    <Box sx={{
-      position: "absolute",
-      top: "35%", 
-      left: "50%",
-      transform: "translateX(-50%)",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      gap: 2,
-    }}>
-      {/* Search Bar */}
+    <Box
+      sx={{
+        position: "absolute",
+        top: "35%",
+        left: "50%",
+        transform: "translateX(-50%)",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: 2,
+      }}
+    >
+      {/* Search & City */}
       <Box
         sx={{
           display: "flex",
@@ -57,24 +65,11 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
           width: "100%",
         }}
       >
-        <TextField
-          fullWidth
-          placeholder="Search listings..."
-          variant="standard"
-          value={searchQuery}
-          onChange={handleSearch}
-          onKeyPress={handleKeyPress}
-          InputProps={{
-            disableUnderline: true,
-            sx: { fontSize: "1rem", padding: "5px 10px" },
-          }}
-        />
-
         <Autocomplete
           freeSolo
           options={cityOptions}
           value={location}
-          onChange={(_e, newValue) => setLocation(newValue || "")}
+          onChange={(_, newValue) => setLocation(newValue || "")}
           renderInput={(params) => (
             <TextField
               {...params}
@@ -87,23 +82,14 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
                   padding: "5px 10px",
                   fontSize: "1rem",
                   width: { xs: "250px", sm: "70px", md: "130px" },
-
                 },
               }}
             />
           )}
-          sx={{
-            width: { xs: "250px", sm: "70px", md: "130px" },
-            backgroundColor: "white",
-            borderRadius: "35px",
-            boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-            paddingX: "15px",
-            paddingY: "5px",
-          }}
         />
       </Box>
 
-      {/* Price Range Section */}
+      {/* Price Range */}
       <Box sx={{ display: "flex", gap: 2 }}>
         <TextField
           label="Min Price"
@@ -113,14 +99,10 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
           onChange={(e) => setMinPrice(e.target.value)}
           sx={{
             width: "120px",
-            border: "2px solid #1f4b43",
             backgroundColor: "white",
             borderRadius: "20px",
-            "& .MuiInputBase-root": {
-              borderRadius: "19px",
-            },
+            border: "2px solid #1f4b43",
           }}
-          inputProps={{ min: 0 }}
         />
         <TextField
           label="Max Price"
@@ -133,104 +115,75 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearch }) => {
             backgroundColor: "white",
             borderRadius: "20px",
             border: "2px solid #1f4b43",
-            "& .MuiInputBase-root": {
-              borderRadius: "19px",
-            },
           }}
-          inputProps={{ min: 1 }}
         />
       </Box>
 
-      <Box sx={{ display: "flex", flexDirection: "row", gap: 2, flexWrap: "wrap", justifyContent: "center" }}>
-      {/* Smoking Toggle Button */}
-      <Button
-        onClick={() => setSmoking((prev) => (prev === "smoking" ? "non-smoking" : "smoking"))}
-        sx={{
-          backgroundColor: smoking === "smoking" ? "#1f4b43" : "white",
-          color: smoking === "smoking" ? "white" : "#1f4b43",
-          borderRadius: "20px",
-          padding: "8px 20px",
-          fontWeight: "bold",
-          border: "2px solid #1f4b43",
-          textTransform: "none",
-          transition: "0.3s",
-          "&:hover": {
-            backgroundColor: smoking === "smoking" ? "#164032" : "#e7c873",
-            color: "white",
+      {/* Filter Buttons */}
+      <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", justifyContent: "center" }}>
+        {[
+          {
+            label: "Smoking",
+            state: smoking,
+            setter: setSmoking,
+            match: "smoking",
           },
-        }}
-      >
-        {smoking === "smoking" ? "Smoking" : "Non-Smoking"}
-      </Button>
-
-      {/* Vegan Toggle Button */}
-      <Button
-        onClick={() => setVegan((prev) => (prev === "vegan friendly" ? "non-vegan" : "vegan friendly"))}
-        sx={{
-          backgroundColor: vegan === "vegan friendly" ? "#1f4b43" : "white",
-          color: vegan === "vegan friendly" ? "white" : "#1f4b43",
-          borderRadius: "20px",
-          padding: "8px 20px",
-          fontWeight: "bold",
-          border: "2px solid #1f4b43",
-          textTransform: "none",
-          transition: "0.3s",
-          "&:hover": {
-            backgroundColor: vegan === "vegan friendly" ? "#164032" : "#e7c873",
-            color: "white",
+          {
+            label: "Vegan Friendly",
+            state: vegan,
+            setter: setVegan,
+            match: "vegan friendly",
           },
-        }}
-      >
-        {vegan === "vegan friendly" ? "Vegan Friendly" : "Non-Vegan"}
-      </Button>
-
-      {/* Pets Toggle Button */}
-      <Button
-        onClick={() => setPetFriendly((prev) => (prev === "pet friendly" ? "non-pets" : "pet friendly"))}
-        sx={{
-          backgroundColor: petFriendly === "pet friendly" ? "#1f4b43" : "white",
-          color: petFriendly === "pet friendly" ? "white" : "#1f4b43",
-          borderRadius: "20px",
-          padding: "8px 20px",
-          fontWeight: "bold",
-          border: "2px solid #1f4b43",
-          textTransform: "none",
-          transition: "0.3s",
-          "&:hover": {
-            backgroundColor: petFriendly === "pet friendly" ? "#164032" : "#e7c873",
-            color: "white",
+          {
+            label: "Pet Friendly",
+            state: petFriendly,
+            setter: setPetFriendly,
+            match: "pet friendly",
           },
-        }}
-      >
-        {petFriendly === "pet friendly" ? "Pet Friendly" : "No-Pets"}
-      </Button>
-
-      {/* Party Friendly Button */}
-      <Button
-        onClick={() => setPartyFriendly((prev) => (prev === "party friendly" ? "No-Parties" : "party friendly"))}
-        sx={{
-          backgroundColor: partyFriendly === "party friendly" ? "#1f4b43" : "white",
-          color: partyFriendly === "party friendly" ? "white" : "#1f4b43",
-          borderRadius: "20px",
-          padding: "8px 20px",
-          fontWeight: "bold",
-          border: "2px solid #1f4b43",
-          textTransform: "none",
-          transition: "0.3s",
-          "&:hover": {
-            backgroundColor: partyFriendly === "party friendly" ? "#164032" : "#e7c873",
-            color: "white",
+          {
+            label: "Party Friendly",
+            state: partyFriendly,
+            setter: setPartyFriendly,
+            match: "party friendly",
           },
-        }}
-      >
-        {partyFriendly === "party friendly" ? "Party Friendly" : "No-Parties"}
-      </Button>
+        ].map(({ label, state, setter, match }) => (
+          <Button
+            key={label}
+            onClick={() => setter((prev) => (prev === match ? null : match))}
+            sx={{
+              backgroundColor: state === match ? "#1f4b43" : "white",
+              color: state === match ? "white" : "#1f4b43",
+              borderRadius: "20px",
+              padding: "8px 20px",
+              fontWeight: "bold",
+              border: "2px solid #1f4b43",
+              textTransform: "none",
+              transition: "0.3s",
+              "&:hover": {
+                backgroundColor: state === match ? "#164032" : "#e7c873",
+                color: "white",
+              },
+            }}
+          >
+            {label}
+          </Button>
+        ))}
       </Box>
 
-      
+      {/* Submit */}
+      <Button
+        onClick={handleSubmit}
+        variant="contained"
+        sx={{
+          mt: 2,
+          fontWeight: "bold",
+          backgroundColor: "#1f4b43",
+          ":hover": { backgroundColor: "#164032" },
+        }}
+      >
+        Search
+      </Button>
     </Box>
-
-    
   );
 };
 
