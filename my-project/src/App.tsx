@@ -12,6 +12,7 @@ import CreateListing from "./pages/ CreateListing";
 import SingleListing from "./pages/SingleListing";
 import SingleGroupView from "./pages/SingleGroupView";
 import PasswordReset from "./pages/PasswordReset";
+import SearchResults from "./pages/SearchResults";
 
 const App = () => {
   return (
@@ -30,6 +31,7 @@ const App = () => {
         <Route path="/listing/:id" element={<SingleListing/>} />
         <Route path="/group/:id" element={<SingleGroupView/>} />
         <Route path="/password-reset" element={<PasswordReset />} />
+        <Route path="/search-results" element={<SearchResults />} />
 
       </Routes>
     </Router>
