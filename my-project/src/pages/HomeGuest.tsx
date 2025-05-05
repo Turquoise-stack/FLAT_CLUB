@@ -1,7 +1,7 @@
 import React from "react";
 import Navbar from "../components/Navbar";
 import SearchBar from "../components/SearchBar";
-import { Box, Grid, Typography, Container } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import ListingGrid from "../components/ListingGrid";
 import CityCard from "../components/CityCard";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
@@ -33,29 +33,25 @@ const theme = createTheme({
 });
 
 const HomeGuest = () => {
-  const handleSearch = (query: string) => {
-    console.log("Searching for:", query);
-  };
-
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
         <Navbar />
 
         <Box
-        sx={{
-          width: "100%",
-          height: { xs: "40vh", md: "70vh" },
-          backgroundImage: `url("/src/assets/home.jpg")`, 
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          backgroundRepeat: "no-repeat",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-          textAlign: "center",
-        }}
+          sx={{
+            width: "100%",
+            height: { xs: "40vh", md: "70vh" },
+            backgroundImage: `url("/src/assets/home.jpg")`,
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            backgroundRepeat: "no-repeat",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+            textAlign: "center",
+          }}
         >
           <Typography
             variant="h3"
@@ -70,12 +66,19 @@ const HomeGuest = () => {
             }}
           >
             Believe in finding it
-            <Box component="span" sx={{ fontSize: { xs: "0.7rem", sm: "0.8rem", md: "1.1rem" }, display: "block", mb: 1 }}>
+            <Box
+              component="span"
+              sx={{
+                fontSize: { xs: "0.7rem", sm: "0.8rem", md: "1.1rem" },
+                display: "block",
+                mb: 1,
+              }}
+            >
               Search for properties or groups to rent them
             </Box>
           </Typography>
 
-          <SearchBar onSearch={handleSearch} />
+          <SearchBar />
         </Box>
 
         <Box>
