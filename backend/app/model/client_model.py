@@ -82,6 +82,7 @@ class GroupMember(Base):
     joined_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     group_id = Column(Integer, ForeignKey("groups.group_id"), nullable=False)
     user_id = Column(Integer, ForeignKey("users.user_id"), nullable=False)
+    status = Column(String, default="pending")  # "pending" or "active"
 
     # Relationships
     group = relationship("Group", back_populates="members")
