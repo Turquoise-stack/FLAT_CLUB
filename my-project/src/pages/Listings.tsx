@@ -10,42 +10,56 @@ import api from "../api/api";
 
 const Listings = () => {
   const [listings, setListings] = useState<any[]>([]);
+  const [groups, setGroups] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const listingsPerPage = 6;
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchListings();
+    fetchData();
   }, []);
 
-  const fetchListings = async () => {
+  const fetchData = async () => {
     try {
-      const res = await api.get("/api/listings/search");
-      setListings(res.data);
+      const [listingsRes, groupsRes] = await Promise.all([
+        api.get("/api/listings/search"),
+        api.get("/api/groups"),
+      ]);
+      setListings(listingsRes.data);
+      setGroups(groupsRes.data);
     } catch (error) {
-      console.error("Failed to fetch listings", error);
+      console.error("Failed to fetch listings or groups", error);
     }
   };
+
+  // Build a mapping of listing_id -> number of groups
+  const groupCountsByListing = groups.reduce((acc: Record<number, number>, group: any) => {
+    const listingId = group.listing_id;
+    if (listingId) {
+      acc[listingId] = (acc[listingId] || 0) + 1;
+    }
+    return acc;
+  }, {});
 
   const indexOfLastListing = currentPage * listingsPerPage;
   const indexOfFirstListing = indexOfLastListing - listingsPerPage;
   const currentListings = listings.slice(indexOfFirstListing, indexOfLastListing);
 
-  const mappedListings = currentListings.map(listing => ({
+  const mappedListings = currentListings.map((listing) => ({
     id: listing.listing_id,
-    image: listing.images && listing.images.length > 0
-      ? `http://localhost:8000/${listing.images[0]}`
-      : "/src/assets/default-image.jpg",
+    image:
+      listing.images && listing.images.length > 0
+        ? `http://localhost:8000/${listing.images[0]}`
+        : "/src/assets/default-image.jpg",
     title: listing.title,
     price: listing.price,
-    location: listing.location, 
+    location: listing.location,
     isRental: listing.isRental,
-    groupCount: 2, // TODO : change it to real groeup count
+    groupCount: groupCountsByListing[listing.listing_id] || 0,
   }));
-  
 
-  const handleSearch = (query: string) => {
-    console.log("Searching for:", query);
+  const handleSearch = (filters: any) => {
+    navigate("/search-result", { state: filters });
   };
 
   return (
@@ -55,7 +69,7 @@ const Listings = () => {
       <Box
         sx={{
           width: "100vw",
-          height: { xs: '40vh', sm: '50vh', md: '60vh', lg: '70vh' },
+          height: { xs: "40vh", sm: "50vh", md: "60vh", lg: "70vh" },
           backgroundImage: `url("/src/assets/waw_search.png")`,
           backgroundSize: "cover",
           backgroundPosition: "center",
@@ -75,7 +89,11 @@ const Listings = () => {
         <Button
           variant="contained"
           onClick={() => navigate("/createListing")}
-          sx={{ fontWeight: "bold", backgroundColor: "#1F4B43", ":hover": { backgroundColor: "#164032" } }}
+          sx={{
+            fontWeight: "bold",
+            backgroundColor: "#1F4B43",
+            ":hover": { backgroundColor: "#164032" },
+          }}
         >
           Create Listing
         </Button>
