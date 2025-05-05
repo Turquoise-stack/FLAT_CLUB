@@ -6,6 +6,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import api from "../api/api";
 import Footer from "../components/Footer";
+import getCurrentUserId from "../utils/getCurrentUserId";
 
 const UserProfileView = () => {
   const [userData, setUserData] = useState<any>(null);
@@ -15,13 +16,19 @@ const UserProfileView = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchUser();
-    fetchListingsAndGroups();
+    const userId = getCurrentUserId();
+    if (!userId) {
+      alert("You must be logged in.");
+      navigate("/login");
+      return;
+    }
+
+    fetchUser(userId);
+    fetchListingsAndGroups(userId);
   }, []);
 
-  const fetchUser = async () => {
+  const fetchUser = async (userId: number) => {
     try {
-      const userId = 1; // TODO : replace with real token
       const res = await api.get(`/api/users/${userId}`);
       setUserData(res.data);
     } catch (err) {
@@ -29,12 +36,11 @@ const UserProfileView = () => {
     }
   };
 
-  const fetchListingsAndGroups = async () => {
+  const fetchListingsAndGroups = async (userId: number) => {
     try {
       const listingsRes = await api.get("/api/listings/search");
       setAllListings(listingsRes.data);
 
-      const userId = 1; // TODO : replace with real token
       const filteredListings = listingsRes.data.filter((listing: any) => listing.owner_id === userId);
       setUserListings(filteredListings);
 
@@ -93,24 +99,21 @@ const UserProfileView = () => {
           </Box>
 
           <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
-
-          <Typography textAlign="center" mt={2}>
-            Forgot password?{" "}
-            <a href="/password-reset" style={{ color: "#1F4B43", fontWeight: "bold", textDecoration: "underline" }}>
-              Reset here
-            </a>
-          </Typography>
+            <Typography textAlign="center" mt={2}>
+              Forgot password?{" "}
+              <a href="/password-reset" style={{ color: "#1F4B43", fontWeight: "bold", textDecoration: "underline" }}>
+                Reset here
+              </a>
+            </Typography>
           </Box>
 
           <Grid container spacing={2}>
-            {/* Basic Info */}
             <Grid item xs={12}><Typography><strong>Username:</strong> {username}</Typography></Grid>
             <Grid item xs={6}><Typography><strong>Name:</strong> {name || "N/A"}</Typography></Grid>
             <Grid item xs={6}><Typography><strong>Surname:</strong> {surname || "N/A"}</Typography></Grid>
             <Grid item xs={12}><Typography><strong>Phone:</strong> {phone_number || "N/A"}</Typography></Grid>
             <Grid item xs={12}><Typography><strong>Bio:</strong> {bio || "No bio yet"}</Typography></Grid>
 
-            {/* Preferences */}
             {preferences && (
               <>
                 <Grid item xs={12}><Divider sx={{ my: 2 }} /></Grid>
@@ -128,7 +131,6 @@ const UserProfileView = () => {
               </>
             )}
 
-            {/* Pets */}
             {pets && (
               <>
                 <Grid item xs={12}><Divider sx={{ my: 2 }} /></Grid>
@@ -138,7 +140,6 @@ const UserProfileView = () => {
               </>
             )}
 
-            {/* Listings */}
             <Grid item xs={12}><Divider sx={{ my: 2 }} /></Grid>
             <Grid item xs={12}><Typography variant="h6">Your Listings</Typography></Grid>
             {userListings.length > 0 ? (
@@ -167,7 +168,6 @@ const UserProfileView = () => {
               <Grid item xs={12}><Typography>No listings yet</Typography></Grid>
             )}
 
-            {/* Groups */}
             <Grid item xs={12}><Divider sx={{ my: 2 }} /></Grid>
             <Grid item xs={12}><Typography variant="h6">Your Groups</Typography></Grid>
             {userGroups.length > 0 ? (
