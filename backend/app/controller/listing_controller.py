@@ -232,7 +232,43 @@ def delete_listing(
 
     return {"message": f"Listing with ID {listing_id} and its related groups and members have been deleted"}
 
+@router.post("/groups", response_model=GroupResponse)
+def create_group(group: GroupCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+    new_group = Group(
+        name=group.name,
+        description=group.description,
+        listing_id=group.listing_id,
+        owner_id=current_user.user_id,
+    )
+    db.add(new_group)
+    db.commit()
+    db.refresh(new_group)
 
+    leader_member = GroupMember(
+        group_id=new_group.group_id,
+        user_id=current_user.user_id,
+        status="active"
+    )
+    db.add(leader_member)
+    db.commit()
+
+    return {
+        "group_id": new_group.group_id,
+        "name": new_group.name,
+        "description": new_group.description,
+        "listing_id": new_group.listing_id,
+        "owner_id": new_group.owner_id,
+        "lifestyle_preference": new_group.lifestyle_preference,
+        "members": [
+            {
+                "user_id": current_user.user_id,
+                "name": current_user.name,
+                "surname": current_user.surname,
+                "username": current_user.username,
+                "status": "active"
+            }
+        ]
+    }
 @router.delete("/groups/{group_id}")
 def delete_group(
     group_id: int,
