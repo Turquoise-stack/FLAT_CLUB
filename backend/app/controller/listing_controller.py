@@ -210,60 +210,51 @@ def delete_listing(
 ):
     listing = db.query(Listing).filter(Listing.listing_id == listing_id).first()
 
-    # Only admins or the user themselves can delete their own lsitng
-    if current_user.role != "admin" and current_user.user_id != listing.owner_id:
-        raise HTTPException(status_code=403, detail="Not authorized to delete this user")
-    
-    # Fetch the listing
     if not listing:
-        raise HTTPException(status_code=404, detail="User not found")
-    
-    # Delete the listing
+        raise HTTPException(status_code=404, detail="Listing not found")
+
+    if current_user.role != "admin" and current_user.user_id != listing.owner_id:
+        raise HTTPException(status_code=403, detail="Not authorized to delete this listing")
+
+    # find and delete GroupMembers of groups tied to this listing
+    groups_to_delete = db.query(Group).filter(Group.listing_id == listing_id).all()
+
+    for group in groups_to_delete:
+        db.query(GroupMember).filter(GroupMember.group_id == group.group_id).delete()
+
+    # delete groups themselves
+    for group in groups_to_delete:
+        db.delete(group)
+
+    # delete the listing
     db.delete(listing)
     db.commit()
-    
-    return {"message": f"Listing with ID {listing_id} has been deleted"}
+
+    return {"message": f"Listing with ID {listing_id} and its related groups and members have been deleted"}
 
 
-@router.post("/groups", response_model=GroupResponse)
-def create_group(group: GroupCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
-    new_group = Group(
-        name=group.name,
-        description=group.description,
-        listing_id=group.listing_id,
-        owner_id=current_user.user_id,
-    )
-    db.add(new_group)
+@router.delete("/groups/{group_id}")
+def delete_group(
+    group_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    group = db.query(Group).filter(Group.group_id == group_id).first()
+
+    if not group:
+        raise HTTPException(status_code=404, detail="Group not found")
+
+    # validate user auth
+    if current_user.role != "admin" and current_user.user_id != group.owner_id:
+        raise HTTPException(status_code=403, detail="Not authorized to delete this group")
+
+    # delete group members
+    db.query(GroupMember).filter(GroupMember.group_id == group_id).delete()
+
+    db.delete(group)
     db.commit()
-    db.refresh(new_group)
 
-    # ✅ Add leader as ACTIVE member
-    leader_member = GroupMember(
-        group_id=new_group.group_id,
-        user_id=current_user.user_id,
-        status="active"
-    )
-    db.add(leader_member)
-    db.commit()
-
-    # Build and return response
-    return {
-        "group_id": new_group.group_id,
-        "name": new_group.name,
-        "description": new_group.description,
-        "listing_id": new_group.listing_id,
-        "owner_id": new_group.owner_id,
-        "lifestyle_preference": new_group.lifestyle_preference,
-        "members": [
-            {
-                "user_id": current_user.user_id,
-                "name": current_user.name,
-                "surname": current_user.surname,
-                "username": current_user.username,
-                "status": "active"
-            }
-        ]
-    }
+    return {"message": f"Group with ID {group_id} has been deleted successfully"}
 
 
 @router.get("/groups/{group_id}", response_model=GroupResponse)
@@ -297,12 +288,12 @@ def get_group_details(group_id: int, db: Session = Depends(get_db)):
 
 @router.post("/groups/{group_id}/join")
 def join_group(group_id: int, db: Session = Depends(get_db), current_user=Depends(get_current_user)):
-    # Check if the group exists
+    # valuidate if group exists
     group = db.query(Group).filter(Group.group_id == group_id).first()
     if not group:
         raise HTTPException(status_code=404, detail="Group not found")
 
-    # Check if the user is already a member of the group
+    # validate user
     existing_membership = db.query(GroupMember).filter(
         GroupMember.group_id == group_id,
         GroupMember.user_id == current_user.user_id
@@ -310,7 +301,7 @@ def join_group(group_id: int, db: Session = Depends(get_db), current_user=Depend
     if existing_membership:
         raise HTTPException(status_code=400, detail="You are already a member of this group")
 
-    # Add the user to the group
+    # add user
     group_member = GroupMember(
         group_id=group_id,
         user_id=current_user.user_id
