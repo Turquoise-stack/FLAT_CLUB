@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Navbar from "../components/Navbar";
 import SearchBar from "../components/SearchBar";
 import { Box, Grid, Typography } from "@mui/material";
@@ -6,17 +6,7 @@ import ListingGrid from "../components/ListingGrid";
 import CityCard from "../components/CityCard";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Footer from "../components/Footer";
-
-const sampleListings = [
-  { id: 1, image: "/src/assets/flats/flat1.png", title: "Modern Apartment in Warsaw", price: 5000, groupCount: 2 },
-  { id: 2, image: "/src/assets/flats/flat2.png", title: "Modern Apartment in Warsaw", price: 5000, groupCount: 2 },
-  { id: 3, image: "/src/assets/flats/flat3.png", title: "Modern Apartment in Warsaw", price: 5000, groupCount: 2 },
-  { id: 4, image: "/src/assets/flats/flat4.png", title: "Modern Apartment in Warsaw", price: 5000, groupCount: 2 },
-  { id: 5, image: "/src/assets/flats/flat5.png", title: "Modern Apartment in Warsaw", price: 5000, groupCount: 2 },
-  { id: 6, image: "/src/assets/flats/flat6.png", title: "Modern Apartment in Warsaw", price: 5000, groupCount: 2 },
-  { id: 7, image: "/src/assets/flats/flat1.png", title: "Modern Apartment in Warsaw", price: 5000, groupCount: 2 },
-  { id: 8, image: "/src/assets/flats/flat2.png", title: "Modern Apartment in Warsaw", price: 5000, groupCount: 2 },
-];
+import api from "../api/api";
 
 const cityData = [
   { city: "Warsaw", properties: 45, image: "/src/assets/cities/warsaw.jpg" },
@@ -33,6 +23,31 @@ const theme = createTheme({
 });
 
 const HomeGuest = () => {
+  const [listings, setListings] = useState<any[]>([]);
+
+  useEffect(() => {
+    fetchListings();
+  }, []);
+
+  const fetchListings = async () => {
+    try {
+      const res = await api.get("/api/listings");
+      const formatted = res.data.map((listing: any) => ({
+        id: listing.listing_id,
+        title: listing.title,
+        price: listing.price,
+        location: listing.location,
+        groupCount: 2, 
+        image: listing.images?.length
+          ? `http://localhost:8000/${listing.images[0]}`
+          : "/src/assets/default-image.jpg",
+      }));
+      setListings(formatted);
+    } catch (error) {
+      console.error("Failed to fetch listings:", error);
+    }
+  };
+
   return (
     <ThemeProvider theme={theme}>
       <Box sx={{ minHeight: "100vh", display: "flex", flexDirection: "column" }}>
@@ -82,7 +97,7 @@ const HomeGuest = () => {
         </Box>
 
         <Box>
-          <ListingGrid listings={sampleListings} />
+          <ListingGrid listings={listings} />
 
           <Typography
             variant="h5"
