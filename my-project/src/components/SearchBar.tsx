@@ -49,7 +49,7 @@ const SearchBar = () => {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        gap: 2,
+        gap: 0.5,
       }}
     >
       {/* Search & City */}
