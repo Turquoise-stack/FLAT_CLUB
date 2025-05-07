@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import {
-  Box, Container, Typography, TextField, Grid, Button, FormControlLabel, Switch, Paper
+  Box, Container, Typography, TextField, Grid, Button, FormControlLabel, Switch, Paper, MenuItem
 } from "@mui/material";
 import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+
+const cityOptions = ["Warsaw", "Elblag", "Krakow", "Gdansk", "Wroclaw", "Poznan", "Lodz", "Lublin"];
 
 const CreateListing = () => {
   const [form, setForm] = useState({
@@ -57,19 +59,10 @@ const CreateListing = () => {
     formData.append("isRental", form.isRental.toString());
     formData.append("status", "active");
 
-    formData.append("preferences", JSON.stringify({
-      language: form.preferences.language,
-      nationality: form.preferences.nationality,
-      smoking: form.preferences.smoking,
-      pet_friendly: form.preferences.pet_friendly,
-      party_friendly: form.preferences.party_friendly,
-      preferred_sex_of_the_flat: form.preferences.preferred_sex_of_the_flat,
-      quiet_hours: form.preferences.quiet_hours,
-      vegan: form.preferences.vegan,
-    }));
+    formData.append("preferences", JSON.stringify(form.preferences));
 
     selectedImages.forEach((image) => {
-      formData.append("images", image); 
+      formData.append("images", image);
     });
 
     try {
@@ -111,7 +104,6 @@ const CreateListing = () => {
           </Typography>
 
           <Grid container spacing={3}>
-            {/* Basic Info */}
             <Grid item xs={12}>
               <TextField
                 label="Title"
@@ -144,11 +136,18 @@ const CreateListing = () => {
 
             <Grid item xs={6}>
               <TextField
+                select
                 label="Location"
                 fullWidth
                 value={form.location}
                 onChange={(e) => handleInput("location", e.target.value)}
-              />
+              >
+                {cityOptions.map((city) => (
+                  <MenuItem key={city} value={city}>
+                    {city}
+                  </MenuItem>
+                ))}
+              </TextField>
             </Grid>
 
             <Grid item xs={12}>
@@ -173,7 +172,9 @@ const CreateListing = () => {
                 label="Languages (comma-separated)"
                 fullWidth
                 value={form.preferences.language.join(", ")}
-                onChange={(e) => handleInput("preferences.language", e.target.value.split(",").map(l => l.trim()))}
+                onChange={(e) =>
+                  handleInput("preferences.language", e.target.value.split(",").map((l) => l.trim()))
+                }
               />
             </Grid>
 
@@ -230,7 +231,12 @@ const CreateListing = () => {
                 label="Preferred Flatmate Genders (comma-separated)"
                 fullWidth
                 value={form.preferences.preferred_sex_of_the_flat.join(", ")}
-                onChange={(e) => handleInput("preferences.preferred_sex_of_the_flat", e.target.value.split(",").map(s => s.trim()))}
+                onChange={(e) =>
+                  handleInput(
+                    "preferences.preferred_sex_of_the_flat",
+                    e.target.value.split(",").map((s) => s.trim())
+                  )
+                }
               />
             </Grid>
 
@@ -255,10 +261,7 @@ const CreateListing = () => {
 
             {/* Image Upload */}
             <Grid item xs={12}>
-              <Button
-                variant="contained"
-                component="label"
-              >
+              <Button variant="contained" component="label">
                 Upload Images (Max 10)
                 <input
                   type="file"
@@ -273,21 +276,24 @@ const CreateListing = () => {
                   }}
                 />
               </Button>
-              <Grid item xs={12}>
-  {selectedImages.length > 0 && (
-    <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 2, mt: 2 }}>
-      {selectedImages.map((file, index) => (
-        <Box key={index} sx={{ width: 100, height: 100, position: "relative" }}>
-          <img
-            src={URL.createObjectURL(file)}
-            alt={`preview-${index}`}
-            style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "8px" }}
-          />
-        </Box>
-      ))}
-    </Box>
-  )}
-</Grid>
+              {selectedImages.length > 0 && (
+                <Box sx={{ display: "flex", flexWrap: "wrap", gap: 2, mt: 2 }}>
+                  {selectedImages.map((file, index) => (
+                    <Box key={index} sx={{ width: 100, height: 100 }}>
+                      <img
+                        src={URL.createObjectURL(file)}
+                        alt={`preview-${index}`}
+                        style={{
+                          width: "100%",
+                          height: "100%",
+                          objectFit: "cover",
+                          borderRadius: "8px",
+                        }}
+                      />
+                    </Box>
+                  ))}
+                </Box>
+              )}
             </Grid>
           </Grid>
 
