@@ -6,8 +6,8 @@ import enum
 
 # Status Enum for Listings
 class ListingStatus(enum.Enum):
-    ACTIVE = "active"
-    ARCHIVED = "archived"
+    active = "active"
+    archived = "archived"
 
 class User(Base):
     __tablename__ = "users"
@@ -38,6 +38,7 @@ class User(Base):
     messages_received = relationship("Message", foreign_keys="Message.recipient_id", back_populates="recipient")  
     ratings = relationship("Rating", back_populates="user") 
     media = relationship("Media", back_populates="user")  # Media Uploaded
+    notifications = relationship("Notification", back_populates="user")  
 
 class Listing(Base):
     __tablename__ = "listings"
@@ -49,11 +50,11 @@ class Listing(Base):
     price = Column(Float, nullable=False)
     isRental = Column(Boolean, nullable=False)
     location = Column(String, nullable=False)
-    images = Column(Integer)  #   Media table
+    images = Column(JSON, nullable=True)
     preferences = Column(JSON, nullable=True)
     created = Column(DateTime, default=datetime.utcnow, nullable=False)
     updated = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
-    status = Column(Enum(ListingStatus), default=ListingStatus.ACTIVE, nullable=False)
+    status = Column(Enum(ListingStatus), default=ListingStatus.active, nullable=False)
 
     # Relationships
     owner = relationship("User", back_populates="listings")
@@ -81,6 +82,7 @@ class GroupMember(Base):
     joined_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     group_id = Column(Integer, ForeignKey("groups.group_id"), nullable=False)
     user_id = Column(Integer, ForeignKey("users.user_id"), nullable=False)
+    status = Column(String, default="pending")  # "pending" or "active"
 
     # Relationships
     group = relationship("Group", back_populates="members")

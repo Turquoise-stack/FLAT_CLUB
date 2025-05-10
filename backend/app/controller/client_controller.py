@@ -1,10 +1,10 @@
-from fastapi import APIRouter, Depends, HTTPException, BackgroundTasks  , Query
+from fastapi import APIRouter, Depends, Form, HTTPException, BackgroundTasks  , Query
 
 from sqlalchemy.orm import Session
 from sqlalchemy import JSON, Column, func
 
 from schemas.user_schemas import LoginRequest, RegisterRequest, PasswordResetRequest, UserListResponse, UserProfileResponse, UserProfileUpdateRequest
-from model.client_model import User
+from model.client_model import Group, GroupMember, Listing, User
 from service.auth import get_current_user, verify_password, get_password_hash, create_access_token, ALGORITHM, SECRET_KEY
 from dependencies import get_db
 from jose import jwt, JWTError
@@ -60,7 +60,7 @@ def login(request: LoginRequest, db: Session = Depends(get_db)):
         raise HTTPException(status_code=400, detail="Invalid credentials")
     
     # Create a jwt token
-    token = create_access_token({"sub": user.email})
+    token = create_access_token({"sub": str(user.user_id)})
     return {"access_token": token, "token_type": "bearer"}
 
 
@@ -104,6 +104,21 @@ def password_reset(request: PasswordResetRequest, db: Session = Depends(get_db))
 
     # Fallback for invalid requests
     raise HTTPException(status_code=400, detail="Invalid request. Provide email or token with new password.")
+
+@router.post("/change-password")
+def change_password(
+    current_password: str = Form(...),
+    new_password: str = Form(...),
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    if not verify_password(current_password, current_user.password):
+        raise HTTPException(status_code=400, detail="Current password is incorrect")
+
+    current_user.password = get_password_hash(new_password)
+    db.commit()
+
+    return {"message": "Password changed successfully"}
 
 @router.get("/users/{user_id}", response_model=UserProfileResponse)
 def get_user_profile(
@@ -203,17 +218,20 @@ def delete_user(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    # Only admins or the user themselves can delete a user
     if current_user.role != "admin" and current_user.user_id != user_id:
         raise HTTPException(status_code=403, detail="Not authorized to delete this user")
-    
-    # Fetch the user
+
     user = db.query(User).filter(User.user_id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
-    
-    # Delete the user
+
+    db.query(GroupMember).filter(GroupMember.user_id == user_id).delete()
+
+    db.query(Group).filter(Group.owner_id == user_id).delete()
+
+    db.query(Listing).filter(Listing.owner_id == user_id).delete()
+
     db.delete(user)
     db.commit()
-    
+
     return {"message": f"User with ID {user_id} has been deleted"}

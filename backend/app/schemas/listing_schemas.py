@@ -25,7 +25,7 @@ class ListingCreate(BaseModel):
     price: float
     location: str
     isRental : bool
-    status: Optional[str] = "ACTIVE"
+    status: Optional[str] = "active"
     preferences: Optional[ListingPreferences] 
 
 class ListingResponse(BaseModel):
@@ -36,23 +36,24 @@ class ListingResponse(BaseModel):
     price: float
     location: str
     isRental: bool
-    images: Optional[int]
-    created: str  # Changed from datetime to str
-    updated: Optional[str]  # Changed from datetime to str
+    images: Optional[List[str]]  
+    created: str 
+    updated: Optional[str]  
     status: Optional[str] = "active"
-    preferences: Optional[dict]  # Assuming preferences are JSON
+    preferences: Optional[dict] 
 
     class Config:
-        orm_mode = True  # Allows SQLAlchemy objects to be directly serialized
+        from_attributes = True
 
 class GroupMemberResponse(BaseModel):
     user_id: int
     name: Optional[str]
     surname: Optional[str]
     username: str
+    status: str 
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class GroupCreate(BaseModel):
     name: str
@@ -85,4 +86,4 @@ class GroupResponse(BaseModel):
     lifestyle_preference: Optional[LifestylePreference]
 
     class Config:
-        orm_mode = True
+        from_attributes = True
