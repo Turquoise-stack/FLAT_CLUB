@@ -12,10 +12,10 @@ const GroupList = ({ groups }: { groups: any[] }) => {
       await Promise.all(
         groups.map(async (group) => {
           try {
-            const res = await api.get(`/api/listings/${group.listingId}`);
+            const res = await api.get(`/listings/${group.listingId}`);
             const listing = res.data;
             newImages[group.id] = listing.images && listing.images.length > 0
-              ? `http://localhost:8000/${listing.images[0]}`
+              ? `${listing.images[0]}`
               : "/src/assets/default-image.jpg";
           } catch (error) {
             console.error(`Failed to fetch listing for group ${group.id}`, error);
