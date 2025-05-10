@@ -13,11 +13,13 @@ app = FastAPI()
 # Enable CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
+    allow_origins=["http://backend:5173"],
     allow_credentials=True,
     allow_methods=["*"],  
     allow_headers=["*"],
 )
+
+app.mount("/static", StaticFiles(directory="static", html=True), name="static")
 
 # Serve static files
 if not os.path.exists("uploads"):
