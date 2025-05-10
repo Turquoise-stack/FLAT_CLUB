@@ -1,0 +1,35 @@
+version: '3.9'
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: flatclub-backend
+
+    volumes:
+      - ./backend/app:/app/app
+      - sqlite-data:/app/app/data
+
+    ports:
+      - "8000:8000"
+
+    command: >
+      sh -c "python app/create_db.py &&
+             uvicorn app.main:app --host 0.0.0.0 --port 8000"
+
+    environment:
+      DATABASE_URL: sqlite:///./app/data/test.db
+
+  frontend:
+    build:
+      context: ./my-project
+      dockerfile: Dockerfile
+    container_name: flatclub-frontend
+    volumes:
+      - ./my-project:/app
+    ports:
+      - "5173:5173"
+    command: ["npm", "run", "dev", "--", "--host"]
+
+volumes:
+  sqlite-data:
