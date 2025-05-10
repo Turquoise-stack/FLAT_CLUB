@@ -7,6 +7,7 @@ import CityCard from "../components/CityCard";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Footer from "../components/Footer";
 import api from "../api/api";
+import { useNavigate } from "react-router-dom";
 
 const cityData = [
   { city: "Warsaw", properties: 45, image: "/src/assets/cities/warsaw.jpg" },
@@ -16,6 +17,9 @@ const cityData = [
   { city: "Wroclaw", properties: 45, image: "/src/assets/cities/wroclaw.png" },
 ];
 
+
+
+
 const theme = createTheme({
   typography: {
     fontFamily: "Roboto, Arial, sans-serif",
@@ -24,23 +28,35 @@ const theme = createTheme({
 
 const HomeGuest = () => {
   const [listings, setListings] = useState<any[]>([]);
+  const navigate = useNavigate(); 
 
+  const handleCardClick = (id: number) => {
+    navigate(`/listing/${id}`);
+  };
+  
   useEffect(() => {
     fetchListings();
   }, []);
 
+  const normalizeImagePath = (path: string) => {
+    return path.startsWith("uploads/")
+      ? `/${path.replace(/^\/+/, "")}`
+      : `/uploads/${path.replace(/^\/+/, "")}`;
+  };
+
   const fetchListings = async () => {
     try {
-      const res = await api.get("/api/listings");
+      const res = await api.get("/listings");
       const formatted = res.data.map((listing: any) => ({
         id: listing.listing_id,
         title: listing.title,
         price: listing.price,
         location: listing.location,
-        groupCount: 2, 
-        image: listing.images?.length
-          ? `http://localhost:8000/${listing.images[0]}`
-          : "/src/assets/default-image.jpg",
+        groupCount: 2,
+        image:
+          listing.images?.length > 0
+            ? normalizeImagePath(listing.images[0])
+            : "/src/assets/default-image.jpg", 
       }));
       setListings(formatted);
     } catch (error) {
@@ -97,7 +113,7 @@ const HomeGuest = () => {
         </Box>
 
         <Box>
-          <ListingGrid listings={listings} />
+        <ListingGrid listings={listings} onCardClick={handleCardClick} />
 
           <Typography
             variant="h5"

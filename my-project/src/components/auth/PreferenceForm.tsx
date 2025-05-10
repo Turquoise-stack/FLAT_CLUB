@@ -16,13 +16,12 @@ import {
   ListItemText,
   FormControl,
 } from "@mui/material";
-import axios from "axios";
 import Snackbar from "@mui/material/Snackbar";
 import MuiAlert from "@mui/material/Alert";
 import { useNavigate } from "react-router-dom";
 
+import api from "../../api/api";
 
-axios.defaults.baseURL = "http://localhost:8000";
 
 const languages = ["English", "French", "German", "Spanish"];
 const nationalities = ["Canadian", "Turkish", "German", "Italian"];
@@ -107,7 +106,7 @@ const PreferenceForm: React.FC<Props> = ({
     setLoading(true);
   
     try {
-      const res = await axios.post("/api/register", registerData);
+      const res = await api.post("/register", registerData);
       console.log("Registered successfully", res.data);
   
       setSnackbar({ open: true, message: "Registered successfully!", severity: "success" });

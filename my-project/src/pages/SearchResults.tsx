@@ -34,7 +34,7 @@ const SearchResults = () => {
         return acc;
       }, {} as Record<string, any>);
 
-      const res = await api.get("/api/listings/search", { params: cleanedFilters });
+      const res = await api.get("/listings/search", { params: cleanedFilters });
       setListings(res.data);
     } catch (error) {
       console.error("Failed to fetch listings", error);
@@ -48,7 +48,7 @@ const SearchResults = () => {
   const mappedListings = currentListings.map(listing => ({
     id: listing.listing_id,
     image: listing.images && listing.images.length > 0
-      ? `http://localhost:8000/${listing.images[0]}`
+      ? `/uploads/${listing.images[0]}`
       : "/src/assets/default-image.jpg",
     title: listing.title,
     price: listing.price,

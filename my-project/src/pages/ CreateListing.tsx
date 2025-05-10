@@ -4,8 +4,7 @@ import {
 } from "@mui/material";
 import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
-
+import api from '../api/api' 
 const cityOptions = ["Warsaw", "Elblag", "Krakow", "Gdansk", "Wroclaw", "Poznan", "Lodz", "Lublin"];
 
 const CreateListing = () => {
@@ -66,7 +65,7 @@ const CreateListing = () => {
     });
 
     try {
-      await axios.post("/api/listings", formData, {
+      await api.post("/listings", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",

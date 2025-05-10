@@ -10,18 +10,48 @@ import GroupList from "../components/GroupList";
 
 const Groups = () => {
   const [groups, setGroups] = useState<any[]>([]);
+  const [images, setImages] = useState<{ [groupId: number]: string }>({});
   const [currentPage, setCurrentPage] = useState(1);
   const groupsPerPage = 6;
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchGroups();
+    fetchGroupsWithImages();
   }, []);
 
-  const fetchGroups = async () => {
+const normalizeImagePath = (path: string) => {
+  const cleaned = path.replace(/^\/+/, "").replace(/^uploads\//, "");
+  return `${cleaned}`;
+};
+
+
+  
+                                                                                        
+  const fetchGroupsWithImages = async () => {
     try {
-      const res = await api.get("/api/groups");
-      setGroups(res.data);
+      const res = await api.get("/groups");
+      const fetchedGroups = res.data;
+      setGroups(fetchedGroups);
+
+      const imageMap: { [groupId: number]: string } = {};
+
+      await Promise.all(
+        fetchedGroups.map(async (group: any) => {
+          try {
+            const listingRes = await api.get(`/listings/${group.listing_id}`);
+            const listing = listingRes.data;
+            imageMap[group.group_id] =
+              listing.images && listing.images.length > 0
+                ? normalizeImagePath(listing.images[0])
+                : "/assets/default-image.jpg"; 
+          } catch (err) {
+            console.error(`Failed to fetch listing for group ${group.group_id}`, err);
+            imageMap[group.group_id] = "/assets/default-image.jpg";
+          }
+        })
+      );
+
+      setImages(imageMap);
     } catch (error) {
       console.error("Failed to fetch groups", error);
     }
@@ -31,12 +61,13 @@ const Groups = () => {
   const indexOfFirstGroup = indexOfLastGroup - groupsPerPage;
   const currentGroups = groups.slice(indexOfFirstGroup, indexOfLastGroup);
 
-  const mappedGroups = currentGroups.map(group => ({
+  const mappedGroups = currentGroups.map((group) => ({
     id: group.group_id,
     name: group.name,
     description: group.description || "No description yet",
     memberCount: group.members ? group.members.length : 0,
     listingId: group.listing_id,
+    image: images[group.group_id] || "/assets/default-image.jpg",
   }));
 
   const handleSearch = (query: string) => {
@@ -50,7 +81,7 @@ const Groups = () => {
       <Box
         sx={{
           width: "100vw",
-          height: { xs: '40vh', sm: '50vh', md: '60vh', lg: '70vh' },
+          height: { xs: "40vh", sm: "50vh", md: "60vh", lg: "70vh" },
           backgroundImage: `url("/src/assets/waw_search.png")`,
           backgroundSize: "cover",
           backgroundPosition: "center",
@@ -70,7 +101,11 @@ const Groups = () => {
         <Button
           variant="contained"
           onClick={() => navigate("/creategroup")}
-          sx={{ fontWeight: "bold", backgroundColor: "#1F4B43", ":hover": { backgroundColor: "#164032" } }}
+          sx={{
+            fontWeight: "bold",
+            backgroundColor: "#1F4B43",
+            ":hover": { backgroundColor: "#164032" },
+          }}
         >
           Create Group
         </Button>

@@ -38,7 +38,7 @@ const ProfileEdit = () => {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await api.get(`/api/users/${userId}`);
+        const res = await api.get(`/users/${userId}`);
         setForm({
           name: res.data.name || "",
           surname: res.data.surname || "",
@@ -86,7 +86,7 @@ const ProfileEdit = () => {
 
   const handleSubmit = async () => {
     try {
-      await api.put(`/api/users/${userId}`, form);
+      await api.put(`/users/${userId}`, form);
       alert("Profile updated successfully.");
       navigate("/profileview");
     } catch (error) {

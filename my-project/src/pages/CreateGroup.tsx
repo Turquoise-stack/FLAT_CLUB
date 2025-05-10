@@ -4,7 +4,7 @@ import {
 } from "@mui/material";
 import Navbar from "../components/Navbar";
 import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import api from "../api/api";
 
 const CreateGroup = () => {
   const [form, setForm] = useState({
@@ -23,7 +23,7 @@ const CreateGroup = () => {
 
   const fetchListings = async () => {
     try {
-      const res = await axios.get("http://localhost:8000/api/listings");
+      const res = await api.get("/listings");
       setListings(res.data);
     } catch (error: any) {
       console.error("Failed to fetch listings", error);
@@ -56,7 +56,7 @@ const CreateGroup = () => {
     };
 
     try {
-      await axios.post("/api/groups", payload, {
+      await api.post("/groups", payload, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

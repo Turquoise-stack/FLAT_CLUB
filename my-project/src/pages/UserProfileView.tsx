@@ -29,7 +29,7 @@ const UserProfileView = () => {
 
   const fetchUser = async (userId: number) => {
     try {
-      const res = await api.get(`/api/users/${userId}`);
+      const res = await api.get(`/users/${userId}`);
       setUserData(res.data);
     } catch (err) {
       console.error("Failed to fetch user profile:", err);
@@ -38,19 +38,37 @@ const UserProfileView = () => {
 
   const fetchListingsAndGroups = async (userId: number) => {
     try {
-      const listingsRes = await api.get("/api/listings/search");
+      const listingsRes = await api.get("/listings/search");
       setAllListings(listingsRes.data);
 
       const filteredListings = listingsRes.data.filter((listing: any) => listing.owner_id === userId);
       setUserListings(filteredListings);
 
-      const groupsRes = await api.get("/api/groups");
+      const groupsRes = await api.get("/groups");
       const filteredGroups = groupsRes.data.filter((group: any) =>
         group.members.some((member: any) => member.user_id === userId)
       );
       setUserGroups(filteredGroups);
     } catch (err) {
       console.error("Failed to fetch listings or groups", err);
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    const confirmDelete = window.confirm("Are you sure you want to delete your account? This action cannot be undone.");
+    if (!confirmDelete) return;
+
+    const userId = getCurrentUserId();
+    if (!userId) return;
+
+    try {
+      await api.delete(`/users/${userId}`);
+      localStorage.removeItem("token");
+      alert("Account deleted successfully.");
+      navigate("/login");
+    } catch (err) {
+      console.error("Failed to delete account:", err);
+      alert("Error deleting account. Please try again later.");
     }
   };
 
@@ -61,7 +79,7 @@ const UserProfileView = () => {
   const getListingImage = (listingId: number) => {
     const listing = allListings.find((l) => l.listing_id === listingId);
     if (listing && listing.images && listing.images.length > 0) {
-      return `http://localhost:8000/${listing.images[0]}`;
+      return `/uploads/${listing.images[0]}`;
     }
     return null;
   };
@@ -93,9 +111,10 @@ const UserProfileView = () => {
         >
           <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>
             <Typography variant="h5">Your Profile</Typography>
-            <Button variant="outlined" onClick={() => navigate("/profileedit")}>
-              Edit Profile
-            </Button>
+            <Box>
+              <Button variant="outlined" sx={{ mr: 2 }} onClick={() => navigate("/profileedit")}>Edit Profile</Button>
+              <Button variant="contained" color="error" onClick={handleDeleteAccount}>Delete Account</Button>
+            </Box>
           </Box>
 
           <Box display="flex" justifyContent="space-between" alignItems="center" mb={4}>

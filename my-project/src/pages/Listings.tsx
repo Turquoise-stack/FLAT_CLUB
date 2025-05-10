@@ -22,8 +22,8 @@ const Listings = () => {
   const fetchData = async () => {
     try {
       const [listingsRes, groupsRes] = await Promise.all([
-        api.get("/api/listings/search"),
-        api.get("/api/groups"),
+        api.get("/listings/search"),
+        api.get("/groups"),
       ]);
       setListings(listingsRes.data);
       setGroups(groupsRes.data);
@@ -32,7 +32,6 @@ const Listings = () => {
     }
   };
 
-  // Build a mapping of listing_id -> number of groups
   const groupCountsByListing = groups.reduce((acc: Record<number, number>, group: any) => {
     const listingId = group.listing_id;
     if (listingId) {
@@ -45,12 +44,18 @@ const Listings = () => {
   const indexOfFirstListing = indexOfLastListing - listingsPerPage;
   const currentListings = listings.slice(indexOfFirstListing, indexOfLastListing);
 
+  const normalizeImagePath = (path: string) => {
+    return path.startsWith("uploads/")
+      ? `/${path.replace(/^\/+/, "")}`
+      : `/uploads/${path.replace(/^\/+/, "")}`;
+  };
+
   const mappedListings = currentListings.map((listing) => ({
     id: listing.listing_id,
     image:
       listing.images && listing.images.length > 0
-        ? `http://localhost:8000/${listing.images[0]}`
-        : "/src/assets/default-image.jpg",
+        ? normalizeImagePath(listing.images[0])
+        : "/default-image.jpg", 
     title: listing.title,
     price: listing.price,
     location: listing.location,
@@ -70,7 +75,7 @@ const Listings = () => {
         sx={{
           width: "100vw",
           height: { xs: "40vh", sm: "50vh", md: "60vh", lg: "70vh" },
-          backgroundImage: `url("/src/assets/waw_search.png")`,
+          backgroundImage: `url("/src/assets/home.jpg")`, 
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",

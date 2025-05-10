@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Box, Typography, TextField, Button } from "@mui/material";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import api from '../api/api'  
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -16,7 +17,7 @@ const Login = () => {
     setError("");
 
     try {
-      const res = await axios.post("/api/login", {
+      const res = await api.post("/login", {
         email,
         password,
       });
