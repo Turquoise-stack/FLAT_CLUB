@@ -18,7 +18,7 @@ const PasswordReset = () => {
       formData.append("current_password", currentPassword);
       formData.append("new_password", newPassword);
   
-      await api.post("/api/change-password", formData, {
+      await api.post("/change-password", formData, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "multipart/form-data",

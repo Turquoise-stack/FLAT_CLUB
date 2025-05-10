@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import AuthCard from "../components/auth/AuthCard";
 import { Box } from "@mui/material";
 import Footer from "../components/Footer";
-import backgroundImg from "../assets/home.jpg";
-import PreferenceForm from "../components/auth/PreferenceForm"; // <- this will be step 2
+import backgroundImg from "/src/assets/home.jpg";
+import PreferenceForm from "../components/auth/PreferenceForm"; 
 
 const Register: React.FC = () => {
   const [step, setStep] = useState(1);
