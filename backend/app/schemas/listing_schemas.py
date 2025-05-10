@@ -50,6 +50,7 @@ class GroupMemberResponse(BaseModel):
     name: Optional[str]
     surname: Optional[str]
     username: str
+    status: str 
 
     class Config:
         from_attributes = True

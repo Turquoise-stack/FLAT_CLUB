@@ -546,3 +546,30 @@ def remove_member(
     db.commit()
     return {"message": "Meber removed"}
 
+
+@router.delete("/groups/{group_id}/leave")
+def leave_group(
+    group_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    group = db.query(Group).filter(Group.group_id == group_id).first()
+    if not group:
+        raise HTTPException(status_code=404, detail="Group not found")
+
+    # prevneting owner from leaving their own group
+    if group.owner_id == current_user.user_id:
+        raise HTTPException(status_code=403, detail="Group owner cannot leave their own group")
+
+    membership = db.query(GroupMember).filter(
+        GroupMember.group_id == group_id,
+        GroupMember.user_id == current_user.user_id
+    ).first()
+
+    if not membership:
+        raise HTTPException(status_code=400, detail="You are not a member of this group")
+
+    db.delete(membership)
+    db.commit()
+
+    return {"message": "You have left the group successfully"}
