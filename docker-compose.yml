@@ -25,8 +25,8 @@ services:
       context: ./my-project
       dockerfile: Dockerfile
     container_name: flatclub-frontend
-    volumes:
-      - ./my-project:/app
+    # volumes:
+    #   - ./my-project:/app
     ports:
       - "5173:5173"
     command: ["npm", "run", "dev", "--", "--host"]
