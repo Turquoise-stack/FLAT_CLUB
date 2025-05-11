@@ -94,7 +94,7 @@ const normalizeImagePath = (path: string) => {
           overflowX: "hidden",
         }}
       >
-        <SearchBar onSearch={handleSearch} />
+        <SearchBar />
       </Box>
 
       <Box sx={{ width: "100%", mt: 3, textAlign: "center" }}>
