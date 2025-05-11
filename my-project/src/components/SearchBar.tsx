@@ -25,19 +25,20 @@ const SearchBar = () => {
 
   const cityOptions = ["Warsaw", "Elblag", "Krakow", "Gdansk", "Wroclaw", "Poznan", "Lodz", "Lublin"];
 
-  const handleSubmit = () => {
-    const filters: SearchFilters = {
-      location,
-      min_price: minPrice ? Number(minPrice) : undefined,
-      max_price: maxPrice ? Number(maxPrice) : undefined,
-      smoking: smoking === "smoking",
-      vegan: vegan === "vegan friendly",
-      pet_friendly: petFriendly === "pet friendly",
-      party_friendly: partyFriendly === "party friendly",
-    };
+const handleSubmit = () => {
+  const params = new URLSearchParams();
 
-    navigate("/search-results", { state: { filters } });
-  };
+  if (location) params.append("location", location);
+  if (minPrice) params.append("min_price", minPrice);
+  if (maxPrice) params.append("max_price", maxPrice);
+  if (smoking === "smoking") params.append("smoking", "true");
+  if (vegan === "vegan friendly") params.append("vegan", "true");
+  if (petFriendly === "pet friendly") params.append("pet_friendly", "true");
+  if (partyFriendly === "party friendly") params.append("party_friendly", "true");
+
+  navigate(`/search-results?${params.toString()}`);
+};
+
 
   return (
     <Box

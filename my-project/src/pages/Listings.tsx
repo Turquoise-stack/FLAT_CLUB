@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Navbar from "../components/Navbar";
 import SearchBar from "../components/SearchBar";
 import { Box, Container, Button } from "@mui/material";
@@ -13,16 +13,18 @@ const Listings = () => {
   const [groups, setGroups] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const listingsPerPage = 6;
+
   const navigate = useNavigate();
+  const locationObj = useLocation();
 
   useEffect(() => {
     fetchData();
-  }, []);
+  }, [locationObj.search]);
 
   const fetchData = async () => {
     try {
       const [listingsRes, groupsRes] = await Promise.all([
-        api.get("/listings/search"),
+        api.get(`/listings/search${locationObj.search}`),
         api.get("/groups"),
       ]);
       setListings(listingsRes.data);
@@ -45,27 +47,22 @@ const Listings = () => {
   const currentListings = listings.slice(indexOfFirstListing, indexOfLastListing);
 
   const normalizeImagePath = (path: string) => {
-    return path.startsWith("uploads/")
-      ? `/${path.replace(/^\/+/, "")}`
-      : `/uploads/${path.replace(/^\/+/, "")}`;
+    const cleanPath = path.replace(/^\/+/, "").replace(/^uploads\//, "");
+    return `/uploads/${cleanPath}`;
   };
 
-  const mappedListings = currentListings.map((listing) => ({
+  const mappedListings = currentListings.map(listing => ({
     id: listing.listing_id,
-    image:
-      listing.images && listing.images.length > 0
-        ? normalizeImagePath(listing.images[0])
-        : "/default-image.jpg", 
+    image: listing.images && listing.images.length > 0
+      ? normalizeImagePath(listing.images[0])
+      : "/uploads/default-image.jpg",  
     title: listing.title,
     price: listing.price,
     location: listing.location,
     isRental: listing.isRental,
-    groupCount: groupCountsByListing[listing.listing_id] || 0,
+    groupCount: 2, 
   }));
 
-  const handleSearch = (filters: any) => {
-    navigate("/search-result", { state: filters });
-  };
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -75,7 +72,7 @@ const Listings = () => {
         sx={{
           width: "100vw",
           height: { xs: "40vh", sm: "50vh", md: "60vh", lg: "70vh" },
-          backgroundImage: `url("/src/assets/home.jpg")`, 
+          backgroundImage: `url("/src/assets/home.jpg")`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
@@ -87,7 +84,7 @@ const Listings = () => {
           overflowX: "hidden",
         }}
       >
-        <SearchBar onSearch={handleSearch} />
+        <SearchBar />
       </Box>
 
       <Box sx={{ width: "100%", mt: 3, textAlign: "center" }}>

@@ -10,36 +10,43 @@ import api from "../api/api";
 const SearchResults = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const filters = location.state || {};
+const filters = Object.fromEntries(new URLSearchParams(location.search));
 
   const [listings, setListings] = useState<any[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const listingsPerPage = 6;
 
+  const normalizeImagePath = (path: string) => {
+  const cleanPath = path.replace(/^\/+/, "").replace(/^uploads\//, "");
+  return `/uploads/${cleanPath}`;
+  };
+
+
   useEffect(() => {
     fetchListings();
   }, [location.state]); // re-fetch if user makes new search
 
-  const fetchListings = async () => {
-    try {
-      const cleanedFilters = Object.entries(filters).reduce((acc, [key, value]) => {
-        if (
-          value !== undefined &&
-          value !== null &&
-          value !== "" &&
-          !(typeof value === "number" && isNaN(value))
-        ) {
+const fetchListings = async () => {
+  try {
+    const cleanedFilters = Object.entries(filters).reduce((acc, [key, value]) => {
+      if (value !== undefined && value !== null && value !== "") {
+        if (["true", "false"].includes(value)) {
+          acc[key] = value === "true";
+        } else if (!isNaN(Number(value))) {
+          acc[key] = Number(value);
+        } else {
           acc[key] = value;
         }
-        return acc;
-      }, {} as Record<string, any>);
+      }
+      return acc;
+    }, {} as Record<string, any>);
 
-      const res = await api.get("/listings/search", { params: cleanedFilters });
-      setListings(res.data);
-    } catch (error) {
-      console.error("Failed to fetch listings", error);
-    }
-  };
+    const res = await api.get("/listings/search", { params: cleanedFilters });
+    setListings(res.data);
+  } catch (error) {
+    console.error("Failed to fetch listings", error);
+  }
+};
 
   const indexOfLastListing = currentPage * listingsPerPage;
   const indexOfFirstListing = indexOfLastListing - listingsPerPage;
@@ -48,14 +55,15 @@ const SearchResults = () => {
   const mappedListings = currentListings.map(listing => ({
     id: listing.listing_id,
     image: listing.images && listing.images.length > 0
-      ? `/uploads/${listing.images[0]}`
-      : "/src/assets/default-image.jpg",
+      ? normalizeImagePath(listing.images[0])
+      : "/uploads/default-image.jpg",
     title: listing.title,
     price: listing.price,
     location: listing.location,
     isRental: listing.isRental,
-    groupCount: 2, // TODO: Replace with real group count if needed
+    groupCount: 2,
   }));
+
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column" }}>
@@ -97,7 +105,7 @@ const SearchResults = () => {
                 count={Math.ceil(listings.length / listingsPerPage)}
                 page={currentPage}
                 onChange={(_event, value) => setCurrentPage(value)}
-                color="primary"
+                color="primary" 
               />
             </Box>
           </>
