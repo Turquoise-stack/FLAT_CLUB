@@ -25,7 +25,8 @@ app.mount("/static", StaticFiles(directory="static", html=True), name="static")
 if not os.path.exists("uploads"):
     os.makedirs("uploads")
 
-app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+uploads_path = os.path.join(os.path.dirname(__file__), "uploads")
+app.mount("/uploads", StaticFiles(directory=uploads_path), name="uploads")
 
 # Routers
 app.include_router(client_router, prefix="/api", tags=["client"])
