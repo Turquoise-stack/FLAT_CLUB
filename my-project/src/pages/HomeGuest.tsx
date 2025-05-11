@@ -10,11 +10,11 @@ import api from "../api/api";
 import { useNavigate } from "react-router-dom";
 
 const cityData = [
-  { city: "Warsaw", properties: 45, image: "/src/assets/cities/warsaw.jpg" },
-  { city: "Elblag", properties: 120, image: "/src/assets/cities/elblag.png" },
-  { city: "Gdansk", properties: 72, image: "/src/assets/cities/gdansk.png" },
-  { city: "Krakow", properties: 93, image: "/src/assets/cities/krakow.png" },
-  { city: "Wroclaw", properties: 45, image: "/src/assets/cities/wroclaw.png" },
+  { city: "Warsaw", image: "/src/assets/cities/warsaw.jpg" },
+  { city: "Elblag", image: "/src/assets/cities/elblag.png" },
+  { city: "Gdansk", image: "/src/assets/cities/gdansk.png" },
+  { city: "Krakow", image: "/src/assets/cities/krakow.png" },
+  { city: "Wroclaw", image: "/src/assets/cities/wroclaw.png" },
 ];
 
 
