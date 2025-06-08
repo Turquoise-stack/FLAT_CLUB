@@ -1,4 +1,5 @@
 import random
+from service.auth import get_password_hash
 from dependencies import get_db
 from model.client_model import Listing, Group, User
 from sqlalchemy.orm import Session
@@ -22,6 +23,24 @@ def seed_database():
     if db.query(Listing).first():
         print("Database already seeded.")
         return
+
+    existing_admin = db.query(User).filter(User.email == "admin@flatclub.com").first()
+    if existing_admin:
+        print("admin already exists... skipping the seeding admimn...")
+        return
+
+    # -- create admin ---
+    admin = User(
+        name="Admin",
+        surname="User",
+        username="admin",
+        email="admin@flatclub.com",
+        phone_number="+000000000",
+        password=get_password_hash("admin123"), 
+        role="admin"
+    )
+    db.add(admin)
+    db.flush()
 
     # Create test user
     user = User(
@@ -74,7 +93,7 @@ def seed_database():
 
     db.add_all(groups)
     db.commit()
-    print("✅ Seeded 20 listings, 20 groups, and assigned random images + preferences.")
+    print("Inital data base is empty. For content seed_data.py will seed 20 listings, 20 groups, and asigned random images + preferences...")
 
 if __name__ == "__main__":
     seed_database()

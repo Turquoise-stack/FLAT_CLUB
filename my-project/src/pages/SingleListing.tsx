@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Box, Container, Typography, Paper, CircularProgress, Button } from "@mui/material";
+import { Box, Container, Typography, Paper, CircularProgress, Button, Stack } from "@mui/material";
 import Navbar from "../components/Navbar";
 import api from "../api/api";
 import getCurrentUserId from "../utils/getCurrentUserId";
@@ -26,10 +26,13 @@ const SingleListing = () => {
   const [owner, setOwner] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [currentUserId, setCurrentUserId] = useState<string | null>(null);
+  const [currentUser, setCurrentUser] = useState<any>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
-    setCurrentUserId(getCurrentUserId());
+    const id = getCurrentUserId();
+    setCurrentUserId(id);
+    fetchCurrentUser(id);
     fetchListing();
   }, []);
 
@@ -45,6 +48,16 @@ const SingleListing = () => {
     }
   };
 
+  const fetchCurrentUser = async (id: string | null) => {
+    if (!id) return;
+    try {
+      const res = await api.get(`/users/${id}`);
+      setCurrentUser(res.data);
+    } catch (err) {
+      console.error("Failed to fetch current user:", err);
+    }
+  };
+
   const fetchOwner = async (ownerId: number) => {
     try {
       const res = await api.get(`/users/${ownerId}`);
@@ -54,7 +67,7 @@ const SingleListing = () => {
     }
   };
 
-  const handleDelete = async () => {
+  const handleDeleteListing = async () => {
     if (!id) return;
     const confirmed = window.confirm("Are you sure you want to delete this listing?");
     if (!confirmed) return;
@@ -69,10 +82,26 @@ const SingleListing = () => {
     }
   };
 
+  const handleDeleteUser = async () => {
+    if (!owner?.user_id || !id) return;
+    const confirmed = window.confirm("Are you sure that you want to delete the owners account and their listing?");
+    if (!confirmed) return;
+
+    try {
+      await api.delete(`/listings/${id}`);
+      await api.delete(`/users/${owner.user_id}`);
+      alert("Owner and their listing deleted...");
+      navigate("/listings");
+    } catch (err) {
+      console.error("Failed to delete ownmr and listing:", err);
+      alert("Failed to delete owners and listing...");
+    }
+  };
+
   const normalizeImagePath = (path: string) => {
     return path.startsWith("uploads/")
-      ? `/${path.replace(/^\/+/, "")}`
-      : `/uploads/${path.replace(/^\/+/, "")}`;
+      ? `/${path.replace(/^\/+/g, "")}`
+      : `/uploads/${path.replace(/^\/+/g, "")}`;
   };
 
   if (loading) {
@@ -91,7 +120,8 @@ const SingleListing = () => {
     );
   }
 
-  const isOwner = currentUserId === String(listing.owner_id);
+  const canDelete = currentUserId === String(listing.owner_id) || currentUser?.role === "admin";
+  const isAdmin = currentUser?.role === "admin";
 
   return (
     <Box
@@ -181,7 +211,7 @@ const SingleListing = () => {
                       </Typography>
                     );
                   }
-
+                  // emojis for easier understandingf 
                   if (typeof value === "boolean") {
                     const icons: Record<string, string> = {
                       smoking: "🚬",
@@ -210,12 +240,17 @@ const SingleListing = () => {
             </Box>
           )}
 
-          {isOwner && (
-            <Box mt={4} textAlign="right">
-              <Button variant="contained" color="error" onClick={handleDelete}>
-                Delete Listing
+          {canDelete && (
+            <Stack mt={4} direction="row" spacing={2} justifyContent="flex-end">
+              <Button variant="contained" color="error" onClick={handleDeleteListing}>
+                Delete  Listing
               </Button>
-            </Box>
+              {isAdmin && (
+                <Button variant="outlined" color="error" onClick={handleDeleteUser}>
+                  Delete owner
+                </Button>
+              )}
+            </Stack>
           )}
         </Paper>
       </Container>
