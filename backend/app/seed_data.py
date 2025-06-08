@@ -49,8 +49,8 @@ def seed_database():
         username="anna.nowak",
         email="anna.nowak@example.com",
         phone_number="+48123123123",
-        password="password",  
-        role="user"
+        password=get_password_hash("password"),
+        role="user",
     )
     db.add(user)
     db.flush()
