@@ -72,6 +72,7 @@ const HomeGuest = () => {
         <Box
           sx={{
             width: "100%",
+            maxWidth: "100%", 
             height: { xs: "40vh", md: "70vh" },
             backgroundImage: `url("/src/assets/home.jpg")`,
             backgroundSize: "cover",
@@ -82,6 +83,7 @@ const HomeGuest = () => {
             justifyContent: "center",
             alignItems: "center",
             textAlign: "center",
+            overflowX: "hidden", 
           }}
         >
           <Typography
