@@ -24,6 +24,7 @@ const SingleGroupView = () => {
   const [listing, setListing] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [currentUserId, setCurrentUserId] = useState<number | null>(null);
+  const [currentUser, setCurrentUser] = useState<any>(null);
   const [ownerInfo, setOwnerInfo] = useState<any>(null);
 
   useEffect(() => {
@@ -33,8 +34,18 @@ const SingleGroupView = () => {
       return;
     }
     setCurrentUserId(Number(userId));
+    fetchCurrentUser(userId);
     fetchGroup();
   }, []);
+
+  const fetchCurrentUser = async (id: string) => {
+    try {
+      const res = await api.get(`/users/${id}`);
+      setCurrentUser(res.data);
+    } catch (err) {
+      console.error("Failed to fetch current user;", err);
+    }
+  };
 
   const fetchGroup = async () => {
     try {
@@ -50,6 +61,36 @@ const SingleGroupView = () => {
       console.error("Failed to fetch group or listing:", err);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDeleteGroupAndOwner = async () => {
+    if (!group?.group_id || !ownerInfo?.user_id) return;
+    const confirmed = window.confirm("Are you sure that you want to delete this group and its owner?");
+    if (!confirmed) return;
+
+    try {
+      await api.delete(`/groups/${group.group_id}`);
+      await api.delete(`/users/${ownerInfo.user_id}`);
+      alert("Group and owner deleted successfully.");
+      navigate("/groups");
+    } catch (err) {
+      console.error("Failed to delete group and owner;", err);
+      alert("Failed to delete group and owner...");
+    }
+  };
+
+  const handleDeleteGroup = async () => {
+    const confirmed = window.confirm("Are you sure that you want to delete this group?");
+    if (!confirmed) return;
+
+    try {
+      await api.delete(`/groups/${group.group_id}`);
+      alert("Group deleted successfully....");
+      navigate("/groups");
+    } catch (err) {
+      console.error("Failed to delete group:", err);
+      alert("Failed to delete the group...");
     }
   };
 
@@ -106,20 +147,6 @@ const SingleGroupView = () => {
     }
   };
 
-  const handleDeleteGroup = async () => {
-    const confirmed = window.confirm("Are you sure you want to delete this group? This cannot be undone.");
-    if (!confirmed) return;
-
-    try {
-      await api.delete(`/groups/${group.group_id}`);
-      alert("Group deleted successfully.");
-      navigate("/groups");
-    } catch (err) {
-      console.error("Failed to delete group:", err);
-      alert("Failed to delete the group.");
-    }
-  };
-
   const handleLeaveGroup = async () => {
     const confirmed = window.confirm("Are you sure you want to leave this group?");
     if (!confirmed) return;
@@ -150,12 +177,13 @@ const SingleGroupView = () => {
     );
   }
 
-  const pendingMembers = group.members.filter((m: any) => m.status === "pending");
-  const activeMembers = group.members.filter((m: any) => m.status === "active");
-
-  const isOwner = group.owner_id === currentUserId;
+  const pendingMembers = group.members?.filter((m: any) => m.status === "pending") || [];
+  const activeMembers = group.members?.filter((m: any) => m.status === "active") || [];
+  const isOwner = group?.owner_id === currentUserId;
+  const isAdmin = currentUser?.role === "admin";
   const isMember = activeMembers.some((m: any) => m.user_id === currentUserId);
   const isPending = pendingMembers.some((m: any) => m.user_id === currentUserId);
+  const canDelete = isAdmin || isOwner;
 
   return (
     <Box
@@ -171,33 +199,7 @@ const SingleGroupView = () => {
     >
       <Navbar />
       <Container maxWidth="md" sx={{ py: 5 }}>
-        <Paper elevation={4} sx={{ p: { xs: 2, md: 4 }, borderRadius: 3, mt: { xs: 6, md: 10 } }}>
-        {listing?.images?.length > 0 && (
-  <Box mb={4}>
-    <Swiper modules={[Navigation]} navigation spaceBetween={10} slidesPerView={1}>
-      {listing.images.map((imgPath: string, idx: number) => {
-        const normalizeImagePath = (path: string) =>
-          path.startsWith("uploads/")
-            ? `/${path.replace(/^\/+/, "")}`
-            : `/uploads/${path.replace(/^\/+/, "")}`;
-
-        const src = normalizeImagePath(imgPath);
-
-        return (
-          <SwiperSlide key={idx}>
-            <img
-              src={src}
-              alt={`listing-img-${idx}`}
-              style={{ width: "100%", height: "400px", objectFit: "cover", borderRadius: "10px" }}
-            />
-          </SwiperSlide>
-        );
-      })}
-    </Swiper>
-  </Box>
-)}
-
-
+        <Paper elevation={4} sx={{ p: { xs: 2, md: 4 }, borderRadius: 3 }}>
           <Typography variant="h4" gutterBottom>{group.name}</Typography>
           <Typography variant="body1" gutterBottom>{group.description || "No description provided."}</Typography>
 
@@ -233,7 +235,7 @@ const SingleGroupView = () => {
             </Box>
           )}
 
-          {isOwner && (
+          {(isOwner || isAdmin) && (
             <Box mt={4}>
               <Typography variant="h6">Pending Join Requests:</Typography>
               {pendingMembers.length === 0 ? (
@@ -249,16 +251,6 @@ const SingleGroupView = () => {
                   </Box>
                 ))
               )}
-
-              <Box mt={4} textAlign="right">
-                <Button
-                  variant="contained"
-                  color="error"
-                  onClick={handleDeleteGroup}
-                >
-                  Delete Group
-                </Button>
-              </Box>
             </Box>
           )}
 
@@ -279,6 +271,19 @@ const SingleGroupView = () => {
               ))
             )}
           </Box>
+
+          {canDelete && (
+            <Box mt={4} display="flex" gap={2} justifyContent="flex-end">
+              <Button variant="contained" color="error" onClick={handleDeleteGroup}>
+                Delete Group
+              </Button>
+              {isAdmin && (
+                <Button variant="outlined" color="error" onClick={handleDeleteGroupAndOwner}>
+                  Delete owner
+                </Button>
+              )}
+            </Box>
+          )}
         </Paper>
       </Container>
     </Box>
