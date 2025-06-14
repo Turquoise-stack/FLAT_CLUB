@@ -82,7 +82,7 @@ const normalizeImagePath = (path: string) => {
         sx={{
           width: "100vw",
           height: { xs: "40vh", sm: "50vh", md: "60vh", lg: "70vh" },
-          backgroundImage: `url("/src/assets/waw_search.png")`,
+          backgroundImage: `url("/assets/waw_search.png")`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",

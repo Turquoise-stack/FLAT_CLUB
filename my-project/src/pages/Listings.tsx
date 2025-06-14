@@ -72,7 +72,7 @@ const Listings = () => {
         sx={{
           width: "100vw",
           height: { xs: "40vh", sm: "50vh", md: "60vh", lg: "70vh" },
-          backgroundImage: `url("/src/assets/home.jpg")`,
+          backgroundImage: `url("/assets/home.jpg")`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",

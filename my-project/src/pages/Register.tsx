@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import AuthCard from "../components/auth/AuthCard";
 import { Box } from "@mui/material";
 import Footer from "../components/Footer";
-import backgroundImg from "/src/assets/home.jpg";
+import backgroundImg from "/assets/home.jpg";
 import PreferenceForm from "../components/auth/PreferenceForm"; 
 
 const Register: React.FC = () => {

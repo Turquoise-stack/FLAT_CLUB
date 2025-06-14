@@ -85,7 +85,7 @@ const CreateListing = () => {
       sx={{
         minHeight: "90vh",
         width: "100vw",
-        backgroundImage: `url("/src/assets/home.jpg")`,
+        backgroundImage: `url("/assets/home.jpg")`,
         backgroundSize: "cover",
         backgroundPosition: "center",
         backgroundRepeat: "no-repeat",

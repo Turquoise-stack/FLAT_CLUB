@@ -10,11 +10,11 @@ import api from "../api/api";
 import { useNavigate } from "react-router-dom";
 
 const cityData = [
-  { city: "Warsaw", image: "/src/assets/cities/warsaw.jpg" },
-  { city: "Elblag", image: "/src/assets/cities/elblag.png" },
-  { city: "Gdansk", image: "/src/assets/cities/gdansk.png" },
-  { city: "Krakow", image: "/src/assets/cities/krakow.png" },
-  { city: "Wroclaw", image: "/src/assets/cities/wroclaw.png" },
+  { city: "Warsaw", image: "/assets/cities/warsaw.jpg" },
+  { city: "Elblag", image: "/assets/cities/elblag.png" },
+  { city: "Gdansk", image: "/assets/cities/gdansk.png" },
+  { city: "Krakow", image: "/assets/cities/krakow.png" },
+  { city: "Wroclaw", image: "/assets/cities/wroclaw.png" },
 ];
 
 
@@ -56,7 +56,7 @@ const HomeGuest = () => {
         image:
           listing.images?.length > 0
             ? normalizeImagePath(listing.images[0])
-            : "/src/assets/default-image.jpg", 
+            : "/assets/default-image.jpg", 
       }));
       setListings(formatted);
     } catch (error) {
@@ -74,7 +74,7 @@ const HomeGuest = () => {
             width: "100%",
             maxWidth: "100%", 
             height: { xs: "40vh", md: "70vh" },
-            backgroundImage: `url("/src/assets/home.jpg")`,
+            backgroundImage: `url("/assets/home.jpg")`,
             backgroundSize: "cover",
             backgroundPosition: "center",
             backgroundRepeat: "no-repeat",
