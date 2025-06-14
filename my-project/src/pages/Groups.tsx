@@ -29,7 +29,7 @@ const normalizeImagePath = (path: string) => {
                                                                                         
   const fetchGroupsWithImages = async () => {
     try {
-      const res = await api.get("/groups");
+      const res = await api.get("/listings/groups");
       const fetchedGroups = res.data;
       setGroups(fetchedGroups);
 
