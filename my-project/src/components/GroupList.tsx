@@ -16,10 +16,10 @@ const GroupList = ({ groups }: { groups: any[] }) => {
             const listing = res.data;
             newImages[group.id] = listing.images && listing.images.length > 0
               ? `${listing.images[0]}`
-              : "/src/assets/default-image.jpg";
+              : "/assets/default-image.jpg";
           } catch (error) {
             console.error(`Failed to fetch listing for group ${group.id}`, error);
-            newImages[group.id] = "/src/assets/default-image.jpg";
+            newImages[group.id] = "/assets/default-image.jpg";
           }
         })
       );

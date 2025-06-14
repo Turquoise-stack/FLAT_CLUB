@@ -73,7 +73,7 @@ const fetchListings = async () => {
         sx={{
           width: "100vw",
           height: { xs: '30vh', sm: '40vh', md: '50vh' },
-          backgroundImage: `url("/src/assets/waw_search.png")`,
+          backgroundImage: `url("/assets/waw_search.png")`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           backgroundRepeat: "no-repeat",
