@@ -13,7 +13,10 @@ app = FastAPI()
 # Enable CORS
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://backend:5173"],
+    allow_origins=[
+    "https://flatclub-production.up.railway.app",
+    "http://localhost:5173"  # for dev
+    ],
     allow_credentials=True,
     allow_methods=["*"],  
     allow_headers=["*"],

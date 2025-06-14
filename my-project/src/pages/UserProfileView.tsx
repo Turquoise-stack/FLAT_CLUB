@@ -44,7 +44,7 @@ const UserProfileView = () => {
       const filteredListings = listingsRes.data.filter((listing: any) => listing.owner_id === userId);
       setUserListings(filteredListings);
 
-      const groupsRes = await api.get("/groups");
+      const groupsRes = await api.get("/listings/groups");
       const filteredGroups = groupsRes.data.filter((group: any) =>
         group.members.some((member: any) => member.user_id === userId)
       );

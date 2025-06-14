@@ -25,7 +25,7 @@ const Listings = () => {
     try {
       const [listingsRes, groupsRes] = await Promise.all([
         api.get(`/listings/search${locationObj.search}`),
-        api.get("/groups"),
+        api.get("/listings/groups"),
       ]);
       setListings(listingsRes.data);
       setGroups(groupsRes.data);
