@@ -22,7 +22,11 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-app.mount("/", StaticFiles(directory="static", html=True), name="static")
+# Routers
+app.include_router(client_router, prefix="/api", tags=["client"])
+app.include_router(system_router, prefix="/api", tags=["system"])
+app.include_router(listing_router, prefix="/api", tags=["listing"])
+app.include_router(message_router, prefix="/api", tags=["message"])
 
 # Serve static files
 if not os.path.exists("uploads"):
@@ -31,8 +35,5 @@ if not os.path.exists("uploads"):
 uploads_path = os.path.join(os.path.dirname(__file__), "uploads")
 app.mount("/uploads", StaticFiles(directory=uploads_path), name="uploads")
 
-# Routers
-app.include_router(client_router, prefix="/api", tags=["client"])
-app.include_router(system_router, prefix="/api", tags=["system"])
-app.include_router(listing_router, prefix="/api", tags=["listing"])
-app.include_router(message_router, prefix="/api", tags=["message"])
+
+app.mount("/", StaticFiles(directory="static", html=True), name="static")
