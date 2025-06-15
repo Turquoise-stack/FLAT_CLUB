@@ -35,5 +35,8 @@
     ENV PYTHONPATH=/app/app
     
     EXPOSE 8000
-    CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
-    
+    CMD ["sh", "-c", "\
+        python app/create_db.py && \
+        python app/seed_data.py && \
+        uvicorn app.main:app --host 0.0.0.0 --port 8000\
+    "]    
