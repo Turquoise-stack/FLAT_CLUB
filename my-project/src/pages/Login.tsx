@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Box, Typography, TextField, Button } from "@mui/material";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import api from '../api/api'  
 
 const Login = () => {
@@ -95,12 +95,19 @@ const Login = () => {
             </Typography>
           )}
 
-          <Typography textAlign="center" mt={2}>
-            Don't have an account?{" "}
-            <a href="/register" style={{ color: "#1F4B43", fontWeight: "bold", textDecoration: "underline" }}>
-              Register here
-            </a>
-          </Typography>
+        <Typography textAlign="center" mt={2}>
+          Don’t have an account?{" "}
+          <Link 
+            to="/register" 
+            style={{
+              color: "#1F4B43",
+              fontWeight: "bold",
+              textDecoration: "underline"
+            }}
+          >
+            Register here
+          </Link>
+        </Typography>
         </Box>
       </Box>
     </Box>
