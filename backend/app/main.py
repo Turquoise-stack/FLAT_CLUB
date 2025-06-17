@@ -41,4 +41,4 @@ app.mount("/", StaticFiles(directory="static", html=True), name="static")
 # Fallback to React app for any non-API route
 @app.get("/{full_path:path}")
 async def frontend_fallback(full_path: str):
-    return FileResponse("my-project/index.html")
+    return FileResponse("my-project/dist/index.html")
