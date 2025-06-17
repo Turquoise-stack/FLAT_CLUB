@@ -14,11 +14,11 @@ app = FastAPI()
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-    "https://flatclub-production.up.railway.app",
-    "http://localhost:5173"  # for dev
+        "https://flatclub-production.up.railway.app",
+        "http://localhost:5173"
     ],
     allow_credentials=True,
-    allow_methods=["*"],  
+    allow_methods=["*"],
     allow_headers=["*"],
 )
 
@@ -28,17 +28,16 @@ app.include_router(system_router, prefix="/api", tags=["system"])
 app.include_router(listing_router, prefix="/api", tags=["listing"])
 app.include_router(message_router, prefix="/api", tags=["message"])
 
-# Serve static files
+# Serve uploads
 if not os.path.exists("uploads"):
     os.makedirs("uploads")
-
 uploads_path = os.path.join(os.path.dirname(__file__), "uploads")
 app.mount("/uploads", StaticFiles(directory=uploads_path), name="uploads")
 
+# frontend assets
+app.mount("/assets", StaticFiles(directory="my-project/dist/assets"), name="assets")
 
-app.mount("/", StaticFiles(directory="static", html=True), name="static")
-
-# Fallback to React app for any non-API route
+# fallback to React app
 @app.get("/{full_path:path}")
 async def frontend_fallback(full_path: str):
     return FileResponse("my-project/dist/index.html")
