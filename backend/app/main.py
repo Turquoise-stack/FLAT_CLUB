@@ -1,7 +1,7 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
 import os
-
+from fastapi.responses import FileResponse
 from controller.client_controller import router as client_router
 from controller.system_controller import router as system_router
 from controller.listing_controller import router as listing_router
@@ -37,3 +37,8 @@ app.mount("/uploads", StaticFiles(directory=uploads_path), name="uploads")
 
 
 app.mount("/", StaticFiles(directory="static", html=True), name="static")
+
+# Fallback to React app for any non-API route
+@app.get("/{full_path:path}")
+async def frontend_fallback(full_path: str):
+    return FileResponse("my-project/index.html")
