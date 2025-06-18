@@ -55,43 +55,50 @@ const handleSubmit = async () => {
     return;
   }
 
-  const formData = new FormData();
-  formData.append("title", form.title);
-  formData.append("description", form.description);
-  formData.append("price", form.price.toString());
-  formData.append("location", form.location);
-  formData.append("isRental", form.isRental.toString());
-  formData.append("status", "active");
+  const numericPrice = parseFloat(form.price);
+    if (isNaN(numericPrice) || numericPrice < 0) {
+      alert("Price must be a non-negative number.");
+      return;
+    }
 
-  formData.append("preferences", JSON.stringify(form.preferences));
+    const formData = new FormData();
+    formData.append("title", form.title);
+    formData.append("description", form.description);
+    formData.append("price", numericPrice.toString()); 
+    formData.append("location", form.location);
+    formData.append("isRental", form.isRental.toString());
+    formData.append("status", "active");
 
-  selectedImages.forEach((image) => {
-    formData.append("images", image);
-  });
+    formData.append("preferences", JSON.stringify(form.preferences));
 
-  try {
-    await api.post("/listings", formData, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "multipart/form-data",
-      },
+    selectedImages.forEach((image) => {
+      formData.append("images", image);
     });
 
-    alert("Listing created successfully!");
-    navigate("/listings");
-  } catch (error: any) {
-    console.error(error.response?.data || error.message);
+    try {
+      await api.post("/listings", formData, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
-    if (Array.isArray(error.response?.data?.detail)) {
-      const messages = error.response.data.detail
-        .map((err: any) => `${err.loc.join(".")}: ${err.msg}`)
-        .join("\n");
-      alert(messages);
-    } else {
-      alert(error.response?.data?.detail || "Failed to create listing.");
+      alert("Listing created successfully!");
+      navigate("/listings");
+    } catch (error: any) {
+      console.error(error.response?.data || error.message);
+
+      if (Array.isArray(error.response?.data?.detail)) {
+        const messages = error.response.data.detail
+          .map((err: any) => `${err.loc.join(".")}: ${err.msg}`)
+          .join("\n");
+        alert(messages);
+      } else {
+        alert(error.response?.data?.detail || "Failed to create listing.");
+      }
     }
-  }
-};
+  };
+
 
 
   return (
