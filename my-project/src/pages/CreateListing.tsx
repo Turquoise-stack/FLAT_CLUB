@@ -42,43 +42,57 @@ const CreateListing = () => {
     });
   };
 
-  const handleSubmit = async () => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      alert("You must be logged in to create a listing.");
-      navigate("/login");
-      return;
-    }
+const handleSubmit = async () => {
+  const token = localStorage.getItem("token");
+  if (!token) {
+    alert("You must be logged in to create a listing.");
+    navigate("/login");
+    return;
+  }
 
-    const formData = new FormData();
-    formData.append("title", form.title);
-    formData.append("description", form.description);
-    formData.append("price", form.price.toString());
-    formData.append("location", form.location);
-    formData.append("isRental", form.isRental.toString());
-    formData.append("status", "active");
+  if (!form.title || !form.description || !form.price || !form.location) {
+    alert("Please fill in Title, Description, Price and Location.");
+    return;
+  }
 
-    formData.append("preferences", JSON.stringify(form.preferences));
+  const formData = new FormData();
+  formData.append("title", form.title);
+  formData.append("description", form.description);
+  formData.append("price", form.price.toString());
+  formData.append("location", form.location);
+  formData.append("isRental", form.isRental.toString());
+  formData.append("status", "active");
 
-    selectedImages.forEach((image) => {
-      formData.append("images", image);
+  formData.append("preferences", JSON.stringify(form.preferences));
+
+  selectedImages.forEach((image) => {
+    formData.append("images", image);
+  });
+
+  try {
+    await api.post("/listings", formData, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "multipart/form-data",
+      },
     });
 
-    try {
-      await api.post("/listings", formData, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "multipart/form-data",
-        },
-      });
+    alert("Listing created successfully!");
+    navigate("/listings");
+  } catch (error: any) {
+    console.error(error.response?.data || error.message);
 
-      alert("Listing created successfully!");
-      navigate("/listings");
-    } catch (error: any) {
-      console.error(error.response?.data || error.message);
+    if (Array.isArray(error.response?.data?.detail)) {
+      const messages = error.response.data.detail
+        .map((err: any) => `${err.loc.join(".")}: ${err.msg}`)
+        .join("\n");
+      alert(messages);
+    } else {
       alert(error.response?.data?.detail || "Failed to create listing.");
     }
-  };
+  }
+};
+
 
   return (
     <Box
