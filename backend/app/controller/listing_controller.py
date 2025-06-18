@@ -45,6 +45,9 @@ async def create_listing(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
+    if price < 0:
+        raise HTTPException(status_code=422, detail="Price must be a positive number.")
+    
     saved_image_paths = []
     if images:
         for img in images:
