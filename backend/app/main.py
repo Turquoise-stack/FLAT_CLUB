@@ -15,7 +15,7 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "https://flatclub-production.up.railway.app",
-        "http://localhost:5173"
+        "http://localhost:5173" # for dev
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -34,10 +34,9 @@ if not os.path.exists("uploads"):
 uploads_path = os.path.join(os.path.dirname(__file__), "uploads")
 app.mount("/uploads", StaticFiles(directory=uploads_path), name="uploads")
 
-# frontend assets
-app.mount("/assets", StaticFiles(directory="my-project/dist/assets"), name="assets")
+app.mount("/assets", StaticFiles(directory="static/assets"), name="assets")
 
-# fallback to React app
+# fallback
 @app.get("/{full_path:path}")
 async def frontend_fallback(full_path: str):
-    return FileResponse("my-project/dist/index.html")
+    return FileResponse("static/index.html")
