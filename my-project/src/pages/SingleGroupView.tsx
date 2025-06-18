@@ -200,6 +200,26 @@ const SingleGroupView = () => {
       <Navbar />
       <Container maxWidth="md" sx={{ py: 5 }}>
         <Paper elevation={4} sx={{ p: { xs: 2, md: 4 }, borderRadius: 3 }}>
+            {listing?.images?.length > 0 && (
+              <Swiper
+                modules={[Navigation]}
+                navigation
+                spaceBetween={10}
+                slidesPerView={1}
+                style={{ marginBottom: "1rem", borderRadius: "12px", overflow: "hidden" }}
+              >
+                {listing.images.map((img: string, index: number) => (
+                  <SwiperSlide key={index}>
+                    <img
+                      src={`/uploads/${img.replace(/^uploads\//, "")}`}
+                      alt={`Listing ${index}`}
+                      style={{ width: "100%", height: "300px", objectFit: "cover" }}
+                    />
+                  </SwiperSlide>
+                ))}
+              </Swiper>
+            )}
+
           <Typography variant="h4" gutterBottom>{group.name}</Typography>
           <Typography variant="body1" gutterBottom>{group.description || "No description provided."}</Typography>
 
