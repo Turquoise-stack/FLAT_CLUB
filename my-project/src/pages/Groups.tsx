@@ -29,7 +29,7 @@ const normalizeImagePath = (path: string) => {
                                                                                         
   const fetchGroupsWithImages = async () => {
     try {
-      const res = await api.get("/listings/groups");
+      const res = await api.get("/groups");
       const fetchedGroups = res.data;
       setGroups(fetchedGroups);
 
@@ -43,7 +43,8 @@ const normalizeImagePath = (path: string) => {
             imageMap[group.group_id] =
               listing.images && listing.images.length > 0
                 ? normalizeImagePath(listing.images[0])
-                : "/assets/default-image.jpg"; 
+                : "/assets/default-image.jpg";
+
           } catch (err) {
             console.error(`Failed to fetch listing for group ${group.group_id}`, err);
             imageMap[group.group_id] = "/assets/default-image.jpg";
