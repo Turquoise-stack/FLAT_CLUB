@@ -107,7 +107,7 @@ const PreferenceForm: React.FC<Props> = ({
   
     try {
       const res = await api.post("/register", registerData);
-      console.log("Registered successfully", res.data);
+      // console.log("Registered successfully", res.data);
   
       setSnackbar({ open: true, message: "Registered successfully!", severity: "success" });
   
@@ -116,7 +116,7 @@ const PreferenceForm: React.FC<Props> = ({
       }, 1500);
   
     } catch (err: any) {
-      console.error(err.response?.data || err.message);
+      // console.error(err.response?.data || err.message);
       setSnackbar({ open: true, message: err.response?.data?.detail || "Registration failed", severity: "error" });
     } finally {
       setLoading(false);
