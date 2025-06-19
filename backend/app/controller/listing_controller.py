@@ -89,9 +89,13 @@ def search_listings(
     quiet_hours_start: Optional[str] = None,
     quiet_hours_end: Optional[str] = None,
     language: Optional[List[str]] = Query(None),
+    owner_id: Optional[int] = None,
     db: Session = Depends(get_db),
 ):
     filters = []
+    
+    if owner_id:
+        filters.append(Listing.owner_id == owner_id)
     
     if location:
         filters.append(Listing.location.ilike(f"%{location}%"))
