@@ -41,18 +41,22 @@ const UserProfileView = () => {
       const listingsRes = await api.get("/listings/search");
       setAllListings(listingsRes.data);
 
-      const filteredListings = listingsRes.data.filter((listing: any) => listing.owner_id === userId);
+      const filteredListings = listingsRes.data.filter(
+        (listing: any) => listing.owner_id === Number(userId)
+      );
       setUserListings(filteredListings);
 
-      const groupsRes = await api.get("/listings/groups");
-      const filteredGroups = groupsRes.data.filter((group: any) =>
-        group.members.some((member: any) => member.user_id === userId)
+      const groupsRes = await api.get("/groups");
+      const filteredGroups = groupsRes.data.filter(
+        (group: any) => group.owner_id === Number(userId)
       );
       setUserGroups(filteredGroups);
     } catch (err) {
-      console.error("Failed to fetch listings or groups", err);
+      console.error("Failed to fetch listings or groups:", err);
     }
   };
+
+
 
   const handleDeleteAccount = async () => {
     const confirmDelete = window.confirm("Are you sure you want to delete your account? This action cannot be undone.");
