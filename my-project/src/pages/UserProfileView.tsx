@@ -56,8 +56,6 @@ const UserProfileView = () => {
     }
   };
 
-
-
   const handleDeleteAccount = async () => {
     const confirmDelete = window.confirm("Are you sure you want to delete your account? This action cannot be undone.");
     if (!confirmDelete) return;
@@ -83,9 +81,9 @@ const UserProfileView = () => {
   const getListingImage = (listingId: number) => {
     const listing = allListings.find((l) => l.listing_id === listingId);
     if (listing && listing.images && listing.images.length > 0) {
-      return `/uploads/${listing.images[0]}`;
+      return `/uploads/${listing.images[0].replace(/^uploads\//, "")}`;
     }
-    return null;
+    return "/assets/default-image.jpg";
   };
 
   return (
@@ -198,14 +196,12 @@ const UserProfileView = () => {
                 <Grid item xs={12} key={group.group_id}>
                   <Link to={`/group/${group.group_id}`} style={{ textDecoration: "none" }}>
                     <Card sx={{ display: "flex", mb: 2 }}>
-                      {getListingImage(group.listing_id) && (
-                        <CardMedia
-                          component="img"
-                          sx={{ width: 150 }}
-                          image={getListingImage(group.listing_id)}
-                          alt={group.name}
-                        />
-                      )}
+                      <CardMedia
+                        component="img"
+                        sx={{ width: 150 }}
+                        image={getListingImage(group.listing_id)}
+                        alt={group.name}
+                      />
                       <CardContent>
                         <Typography variant="subtitle1" fontWeight="bold">{group.name}</Typography>
                       </CardContent>
