@@ -55,12 +55,18 @@ const CreateGroup = () => {
     if (!form.description.trim()) {
       validationErrors.description = "Description is required";
     }
-    if (!form.listing_id) {
+    if (!form.listing_id || Number(form.listing_id) <= 0) {
       validationErrors.listing_id = "Please select a listing";
     }
     setErrors(validationErrors);
     return Object.values(validationErrors).every((err) => !err);
   };
+
+  const isFormValid =
+    form.name.trim() !== "" &&
+    form.description.trim() !== "" &&
+    form.listing_id &&
+    Number(form.listing_id) > 0;
 
   const handleSubmit = async () => {
     if (!validate()) {
@@ -75,8 +81,8 @@ const CreateGroup = () => {
     }
 
     const payload = {
-      name: form.name,
-      description: form.description,
+      name: form.name.trim(),
+      description: form.description.trim(),
       listing_id: Number(form.listing_id),
     };
 
@@ -94,11 +100,6 @@ const CreateGroup = () => {
       alert(error.response?.data?.detail || "Failed to create group.");
     }
   };
-
-  const isFormValid =
-    form.name.trim() !== "" &&
-    form.description.trim() !== "" &&
-    Boolean(form.listing_id);
 
   return (
     <Box
@@ -155,11 +156,15 @@ const CreateGroup = () => {
                 select
                 required
                 fullWidth
+                displayEmpty
                 value={form.listing_id}
                 onChange={(e) => handleChange("listing_id", e.target.value)}
                 error={Boolean(errors.listing_id)}
                 helperText={errors.listing_id}
               >
+                <MenuItem value="" disabled>
+                  Select a listing
+                </MenuItem>
                 {listings.map((listing) => (
                   <MenuItem key={listing.listing_id} value={listing.listing_id}>
                     {listing.title} - {listing.location}
