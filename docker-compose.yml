@@ -5,20 +5,21 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: flatclub-backend
+
     volumes:
-      - sqlite-data:/data
-    environment:
-      DATABASE_URL: sqlite:///./data/test.db
+      - ./backend/app:/app/app
+      - sqlite-data:/app/app/data
+
     ports:
       - "8000:8000"
+
     command: >
-      sh -c "if [ ! -f /data/test.db ]; then
-               mkdir -p /data &&
-               chmod 777 /data &&
-               python app/create_db.py &&
-               python app/seed_data.py;
-             fi &&
+      sh -c "python app/create_db.py &&
+             python app/seed_data.py &&
              uvicorn app.main:app --host 0.0.0.0 --port 8000"
+
+    environment:
+      DATABASE_URL: sqlite:///./app/data/test.db
 
   frontend:
     build:
