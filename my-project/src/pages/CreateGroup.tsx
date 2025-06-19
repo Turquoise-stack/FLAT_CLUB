@@ -14,6 +14,11 @@ const CreateGroup = () => {
     quiet_hours: { start: "", end: "" },
   });
 
+  const [errors, setErrors] = useState({
+    name: "",
+    description: "",
+    listing_id: "",
+  });
   const [listings, setListings] = useState<any[]>([]);
   const navigate = useNavigate();
 
@@ -32,6 +37,7 @@ const CreateGroup = () => {
 
   const handleChange = (field: string, value: any) => {
     setForm((prev) => ({ ...prev, [field]: value }));
+    setErrors((prev) => ({ ...prev, [field]: "" }));
   };
 
   const handleQuietChange = (field: "start" | "end", value: string) => {
@@ -41,7 +47,26 @@ const CreateGroup = () => {
     }));
   };
 
+  const validate = () => {
+    const validationErrors = { name: "", description: "", listing_id: "" };
+    if (!form.name.trim()) {
+      validationErrors.name = "Group name is required";
+    }
+    if (!form.description.trim()) {
+      validationErrors.description = "Description is required";
+    }
+    if (!form.listing_id) {
+      validationErrors.listing_id = "Please select a listing";
+    }
+    setErrors(validationErrors);
+    return Object.values(validationErrors).every((err) => !err);
+  };
+
   const handleSubmit = async () => {
+    if (!validate()) {
+      return;
+    }
+
     const token = localStorage.getItem("token");
     if (!token) {
       alert("You must be logged in to create a group.");
@@ -70,6 +95,11 @@ const CreateGroup = () => {
     }
   };
 
+  const isFormValid =
+    form.name.trim() !== "" &&
+    form.description.trim() !== "" &&
+    Boolean(form.listing_id);
+
   return (
     <Box
       sx={{
@@ -96,20 +126,26 @@ const CreateGroup = () => {
             <Grid item xs={12}>
               <TextField
                 label="Group Name"
+                required
                 fullWidth
                 value={form.name}
                 onChange={(e) => handleChange("name", e.target.value)}
+                error={Boolean(errors.name)}
+                helperText={errors.name}
               />
             </Grid>
 
             <Grid item xs={12}>
               <TextField
                 label="Description"
+                required
                 fullWidth
                 multiline
                 rows={3}
                 value={form.description}
                 onChange={(e) => handleChange("description", e.target.value)}
+                error={Boolean(errors.description)}
+                helperText={errors.description}
               />
             </Grid>
 
@@ -117,9 +153,12 @@ const CreateGroup = () => {
               <TextField
                 label="Select Listing"
                 select
+                required
                 fullWidth
                 value={form.listing_id}
                 onChange={(e) => handleChange("listing_id", e.target.value)}
+                error={Boolean(errors.listing_id)}
+                helperText={errors.listing_id}
               >
                 {listings.map((listing) => (
                   <MenuItem key={listing.listing_id} value={listing.listing_id}>
@@ -149,7 +188,12 @@ const CreateGroup = () => {
             </Grid>
 
             <Grid item xs={12}>
-              <Button variant="contained" onClick={handleSubmit}>
+              <Button
+                variant="contained"
+                onClick={handleSubmit}
+                disabled={!isFormValid}
+                fullWidth
+              >
                 Create Group
               </Button>
             </Grid>
