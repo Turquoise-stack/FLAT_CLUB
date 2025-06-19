@@ -81,10 +81,12 @@ const UserProfileView = () => {
   const getListingImage = (listingId: number) => {
     const listing = allListings.find((l) => l.listing_id === listingId);
     if (listing && listing.images && listing.images.length > 0) {
-      return `/uploads/${listing.images[0].replace(/^uploads\//, "")}`;
+      const cleaned = listing.images[0].replace(/^uploads\//, "");
+      return `/uploads/${cleaned}`;
     }
     return "/assets/default-image.jpg";
   };
+
 
   return (
     <Box
