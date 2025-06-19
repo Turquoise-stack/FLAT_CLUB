@@ -241,12 +241,22 @@ def delete_listing(
 
 @router.post("/groups", response_model=GroupResponse)
 def create_group(group: GroupCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
+
+    
     new_group = Group(
         name=group.name,
         description=group.description,
         listing_id=group.listing_id,
         owner_id=current_user.user_id,
     )
+
+    if not group.name or not group.name.strip():
+        raise HTTPException(status_code=400, detail="Group name is required")
+    if not group.description or not group.description.strip():
+        raise HTTPException(status_code=400, detail="Group description is required")
+    if not isinstance(group.listing_id, int):
+        raise HTTPException(status_code=400, detail="Valid listing_id is required")
+    
     db.add(new_group)
     db.commit()
     db.refresh(new_group)
