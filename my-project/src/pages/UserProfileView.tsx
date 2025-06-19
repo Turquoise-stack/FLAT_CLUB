@@ -78,7 +78,8 @@ const UserProfileView = () => {
 
   const { name, surname, username, bio, phone_number, preferences, pets } = userData;
 
-  const getListingImage = (listingId: number) => {
+  const getListingImage = (listingId: number | null) => {
+    if (!listingId) return "/assets/default-image.jpg";
     const listing = allListings.find((l) => l.listing_id === listingId);
     if (listing && listing.images && listing.images.length > 0) {
       const cleaned = listing.images[0].replace(/^uploads\//, "");
@@ -86,6 +87,7 @@ const UserProfileView = () => {
     }
     return "/assets/default-image.jpg";
   };
+
 
 
   return (
@@ -201,7 +203,7 @@ const UserProfileView = () => {
                       <CardMedia
                         component="img"
                         sx={{ width: 150 }}
-                        image={getListingImage(group.listing_id)}
+                        image={group.listing_id ? getListingImage(group.listing_id) : "/assets/default-image.jpg"}
                         alt={group.name}
                       />
                       <CardContent>
