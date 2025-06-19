@@ -174,7 +174,7 @@ const UserProfileView = () => {
                         <CardMedia
                           component="img"
                           sx={{ width: 150 }}
-                          image={`http://localhost:8000/${listing.images[0]}`}
+                          image={`/uploads/${listing.images[0].replace(/^uploads\//, "")}`}
                           alt={listing.title}
                         />
                       )}
