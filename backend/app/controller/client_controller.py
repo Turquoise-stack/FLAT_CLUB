@@ -1,8 +1,6 @@
-from fastapi import APIRouter, Depends, Form, HTTPException, BackgroundTasks  , Query
-
+from fastapi import APIRouter, Depends, Form, HTTPException, Query
 from sqlalchemy.orm import Session
-from sqlalchemy import JSON, Column, func
-
+from sqlalchemy import func
 from schemas.user_schemas import LoginRequest, RegisterRequest, PasswordResetRequest, UserListResponse, UserProfileResponse, UserProfileUpdateRequest
 from model.client_model import Group, GroupMember, Listing, User
 from service.auth import get_current_user, verify_password, get_password_hash, create_access_token, ALGORITHM, SECRET_KEY
@@ -11,13 +9,11 @@ from jose import jwt, JWTError
 
 router = APIRouter()
 
-
 @router.post("/register")
 def register(
     request: RegisterRequest, 
     db: Session = Depends(get_db)
     ):
-    # validate if username or email already exists
     if request.email:
         existing_user = db.query(User).filter(User.email == request.email).first()
         if existing_user:
@@ -30,7 +26,6 @@ def register(
     
     hashed_password = get_password_hash(request.password)
 
-    # user creation
     new_user = User(
         name=request.name,
         surname=request.surname,
@@ -38,7 +33,7 @@ def register(
         email=request.email,
         phone_number=request.phone_number,
         password=hashed_password,
-        role=request.role or "user",  # Default role is user
+        role=request.role or "user",  
         preference=request.preferences.dict() if request.preferences else None,
         bio=request.bio,
         pets=request.pets.dict() if request.pets else None,
@@ -50,38 +45,19 @@ def register(
 
     return {"message": "User registered successfully"}
 
-@router.post("/login")
-def login(request: LoginRequest, db: Session = Depends(get_db)):
-    # query the user by email
-    user = db.query(User).filter(User.email == request.email).first()
-
-    # Validatte user and password
-    if not user or not verify_password(request.password, user.password):
-        raise HTTPException(status_code=400, detail="Invalid credentials")
-    
-    # Create a jwt token
-    token = create_access_token({"sub": str(user.user_id)})
-    return {"access_token": token, "token_type": "bearer"}
-
-
-
 @router.post("/password-reset")
 def password_reset(request: PasswordResetRequest, db: Session = Depends(get_db)):
-    # step 1 - token generation (requesting reset)
     if request.email:
         user = db.query(User).filter(User.email == request.email).first()
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
 
-        # Generate reset token
         reset_token = create_access_token({"sub": user.email})
         
-        # Simulate sending the token via email
         print(f"Password reset token for {request.email}: {reset_token}")
 
         return {"message": "Password reset link has been sent to your email"}
 
-    # step 2 -  password reset (updatting password)
     if request.token and request.new_password:
         try:
             payload = jwt.decode(request.token, SECRET_KEY, algorithms=[ALGORITHM])
@@ -95,14 +71,12 @@ def password_reset(request: PasswordResetRequest, db: Session = Depends(get_db))
         if not user:
             raise HTTPException(status_code=404, detail="User not found")
 
-        # Hash and update the password
         hashed_password = get_password_hash(request.new_password)
         user.hashed_password = hashed_password
         db.commit()
 
         return {"message": "Password has been reset successfully"}
 
-    # Fallback for invalid requests
     raise HTTPException(status_code=400, detail="Invalid request. Provide email or token with new password.")
 
 @router.post("/change-password")
@@ -119,6 +93,16 @@ def change_password(
     db.commit()
 
     return {"message": "Password changed successfully"}
+
+@router.post("/login")
+def login(request: LoginRequest, db: Session = Depends(get_db)):
+    user = db.query(User).filter(User.email == request.email).first()
+
+    if not user or not verify_password(request.password, user.password):
+        raise HTTPException(status_code=400, detail="Invalid credentials")
+    
+    token = create_access_token({"sub": str(user.user_id)})
+    return {"access_token": token, "token_type": "bearer"}
 
 @router.get("/users/{user_id}", response_model=UserProfileResponse)
 def get_user_profile(
@@ -151,12 +135,10 @@ def update_user_profile(
     profile_update: UserProfileUpdateRequest, 
     db: Session = Depends(get_db)
     ):
-    # Fetch user
     user = db.query(User).filter(User.user_id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
     
-    # Update the fields if its provided
     if profile_update.name is not None:
         user.name = profile_update.name
     if profile_update.surname is not None:
@@ -193,7 +175,6 @@ def list_all_users(
     limit: int = Query(10, le=100), 
     db: Session = Depends(get_db)
 ):
-    # Fetch total count and results
     total_users = db.query(func.count(User.user_id)).scalar()
     users = db.query(User).offset(skip).limit(limit).all()
     

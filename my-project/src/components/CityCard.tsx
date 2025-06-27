@@ -3,7 +3,7 @@ import { Box, Typography } from "@mui/material";
 
 interface CityCardProps {
   city: string;
-  image: string; // path to island/city image
+  image: string;
 }
 
 const CityCard: React.FC<CityCardProps> = ({ city, image }) => {
@@ -26,7 +26,6 @@ const CityCard: React.FC<CityCardProps> = ({ city, image }) => {
         },
       }}
     >
-      {/* Island image or background */}
       <Box
         sx={{
           height: "60%",
@@ -36,7 +35,6 @@ const CityCard: React.FC<CityCardProps> = ({ city, image }) => {
         }}
       />
 
-      {/* Content */}
       <Box sx={{ p: 2, textAlign: "center" }}>
         <Typography variant="h6" fontWeight="bold" color="#1f4b43">
           {city}

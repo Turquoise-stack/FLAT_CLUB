@@ -4,7 +4,6 @@ from database import Base
 from datetime import datetime
 import enum
 
-# Status Enum for Listings
 class ListingStatus(enum.Enum):
     active = "active"
     archived = "archived"
@@ -12,32 +11,26 @@ class ListingStatus(enum.Enum):
 class User(Base):
     __tablename__ = "users"
     
-    # pk
     user_id = Column(Integer, primary_key=True, index=True)
-
     name = Column(String, nullable=True) 
     surname = Column(String, nullable=True)  
     username = Column(String, unique=True, nullable=False)  
     email = Column(String, unique=True, nullable=True)  
     phone_number = Column(String, nullable=True)  
     password = Column(String, nullable=False)
-
-    # preferences and other info
-    role = Column(String, nullable=False)  # Example: tenant ovner and admin
-    preference = Column(JSON, nullable=True)  # JSON for dynamic preferences
+    role = Column(String, nullable=False) 
+    preference = Column(JSON, nullable=True)  
     bio = Column(String, nullable=True)
     pets = Column(JSON, nullable=True) 
-
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
-    # relationships
     listings = relationship("Listing", back_populates="owner")  
     groups_owned = relationship("Group", back_populates="owner")  
     group_memberships = relationship("GroupMember", back_populates="user")  
     messages_sent = relationship("Message", foreign_keys="Message.sender_id", back_populates="sender") 
     messages_received = relationship("Message", foreign_keys="Message.recipient_id", back_populates="recipient")  
     ratings = relationship("Rating", back_populates="user") 
-    media = relationship("Media", back_populates="user")  # Media Uploaded
+    media = relationship("Media", back_populates="user") 
     notifications = relationship("Notification", back_populates="user")  
 
 class Listing(Base):
@@ -56,7 +49,6 @@ class Listing(Base):
     updated = Column(DateTime, default=datetime.utcnow, onupdate=datetime.utcnow, nullable=False)
     status = Column(Enum(ListingStatus), default=ListingStatus.active, nullable=False)
 
-    # Relationships
     owner = relationship("User", back_populates="listings")
     groups = relationship("Group", back_populates="listing")
     ratings = relationship("Rating", back_populates="listing")
@@ -71,7 +63,6 @@ class Group(Base):
     listing_id = Column(Integer, ForeignKey("listings.listing_id"), nullable=False)
     owner_id = Column(Integer, ForeignKey("users.user_id"), nullable=False)
 
-    # Relationships
     owner = relationship("User", back_populates="groups_owned")
     listing = relationship("Listing", back_populates="groups")
     members = relationship("GroupMember", back_populates="group")
@@ -82,13 +73,11 @@ class GroupMember(Base):
     joined_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     group_id = Column(Integer, ForeignKey("groups.group_id"), nullable=False)
     user_id = Column(Integer, ForeignKey("users.user_id"), nullable=False)
-    status = Column(String, default="pending")  # "pending" or "active"
+    status = Column(String, default="pending") 
 
-    # Relationships
     group = relationship("Group", back_populates="members")
     user = relationship("User", back_populates="group_memberships")
 
-# Messages Model
 class Message(Base):
     __tablename__ = "messages"
     message_id = Column(Integer, primary_key=True, index=True)
@@ -98,7 +87,6 @@ class Message(Base):
     recipient_id = Column(Integer, ForeignKey("users.user_id"), nullable=False)
     recipient_type_id = Column(Integer, ForeignKey("recipient_type.type_id"), nullable=False)
 
-    # Relationships
     sender = relationship("User", foreign_keys=[sender_id], back_populates="messages_sent")
     recipient = relationship("User", foreign_keys=[recipient_id], back_populates="messages_received")
     recipient_type = relationship("RecipientType", back_populates="messages")
@@ -108,7 +96,6 @@ class RecipientType(Base):
     type_id = Column(Integer, primary_key=True, index=True)
     type_name = Column(String, nullable=False)
 
-    # Relationships
     messages = relationship("Message", back_populates="recipient_type")
 
 class Rating(Base):
@@ -120,7 +107,7 @@ class Rating(Base):
     user_id = Column(Integer, ForeignKey("users.user_id"), nullable=False)
     listing_id = Column(Integer, ForeignKey("listings.listing_id"), nullable=False)
 
-    # Relationships
+
     user = relationship("User", back_populates="ratings")
     listing = relationship("Listing", back_populates="ratings")
 
@@ -131,9 +118,7 @@ class Media(Base):
     user_id = Column(Integer, ForeignKey("users.user_id"), nullable=True)
     listing_id = Column(Integer, ForeignKey("listings.listing_id"), nullable=True)
     
-    # Relationships
     user = relationship("User", back_populates="media")
-
 
 class Notification(Base):
     __tablename__ = "notifications"
@@ -144,5 +129,4 @@ class Notification(Base):
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     is_read = Column(Boolean, default=False, nullable=False)
 
-    # Relationships
     user = relationship("User", back_populates="notifications")

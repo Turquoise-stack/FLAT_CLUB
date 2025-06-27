@@ -182,7 +182,6 @@ const handleSubmit = async () => {
               />
             </Grid>
 
-            {/* Preferences */}
             <Grid item xs={12}>
               <Typography variant="h6">Flat Preferences</Typography>
             </Grid>
@@ -279,7 +278,6 @@ const handleSubmit = async () => {
               />
             </Grid>
 
-            {/* Image Upload */}
             <Grid item xs={12}>
               <Button variant="contained" component="label">
                 Upload Images (Max 10)

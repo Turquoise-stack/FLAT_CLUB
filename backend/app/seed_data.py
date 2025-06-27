@@ -29,7 +29,6 @@ def seed_database():
         print("admin already exists... skipping the seeding admimn...")
         return
 
-    # -- create admin ---
     admin = User(
         name="Admin",
         surname="User",
@@ -42,7 +41,6 @@ def seed_database():
     db.add(admin)
     db.flush()
 
-    # Create test user
     user = User(
         name="Anna",
         surname="Nowak",

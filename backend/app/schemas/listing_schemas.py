@@ -10,14 +10,14 @@ class ListingUpdateRequest(BaseModel):
     status: Optional[str] = "active"
 
 class ListingPreferences(BaseModel):
-    language: Optional[List[str]]  # list of languages being spoken in the flat
-    nationality: Optional[str] # list of nationalities are in the flat
-    smoking: Optional[bool]  # true for smoking, false for non-smoking
+    language: Optional[List[str]] 
+    nationality: Optional[str] 
+    smoking: Optional[bool] 
     pet_friendly: Optional[bool]  
     party_friendly: Optional[bool]
-    preferred_sex_of_the_flat: Optional[List[str]]  # male fmale etc.
-    quiet_hours: Optional[Dict[str, str]]  # E.g., ("22:00", "08:00")
-    vegan: Optional[bool] # true for vegan, false for not
+    preferred_sex_of_the_flat: Optional[List[str]]  
+    quiet_hours: Optional[Dict[str, str]] 
+    vegan: Optional[bool] 
 
 class ListingCreate(BaseModel):
     title: str
@@ -65,13 +65,14 @@ class RentDivision(BaseModel):
     percentage: float
 
 class QuietHours(BaseModel):
-    start: str  # Time in HH:MM format
-    end: str    # Time in HH:MM format
+    # Time format hh:mm
+    start: str  
+    end: str    
 
 class LifestylePreference(BaseModel):
-    rent_division: Optional[Dict[int, float]]  # Keyed by user_id
+    rent_division: Optional[Dict[int, float]]  
     quiet_hours: Optional[QuietHours]
-    ready_to_sign: Optional[List[int]] = []  # List of member IDs ready to sign
+    ready_to_sign: Optional[List[int]] = []
 
 class UpdateGroupPreferenceRequest(BaseModel):
     lifestyle_preference: LifestylePreference

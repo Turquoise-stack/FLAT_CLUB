@@ -38,7 +38,6 @@ const Navbar = () => {
           Flat Club
         </Typography>
 
-        {/* Centered Buttons */}
         <Box
           sx={{
             display: "flex",

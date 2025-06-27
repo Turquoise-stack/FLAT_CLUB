@@ -16,7 +16,6 @@ const Footer = () => {
         width: "100%",
       }}
     >
-      {/* Footer Text */}
       <Typography variant="h6" fontWeight="bold" mb={1}>
         Flat Club
       </Typography>

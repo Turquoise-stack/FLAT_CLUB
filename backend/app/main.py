@@ -10,25 +10,22 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 
-# Enable CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "https://flatclub-production.up.railway.app",
-        "http://localhost:5173" # for dev
+        "http://localhost:5173" 
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# Routers
 app.include_router(client_router, prefix="/api", tags=["client"])
 app.include_router(system_router, prefix="/api", tags=["system"])
 app.include_router(listing_router, prefix="/api", tags=["listing"])
 app.include_router(message_router, prefix="/api", tags=["message"])
 
-# Serve uploads
 if not os.path.exists("uploads"):
     os.makedirs("uploads")
 uploads_path = os.path.join(os.path.dirname(__file__), "uploads")
@@ -36,7 +33,6 @@ app.mount("/uploads", StaticFiles(directory=uploads_path), name="uploads")
 
 app.mount("/assets", StaticFiles(directory="static/assets"), name="assets")
 
-# fallback
 @app.get("/{full_path:path}")
 async def frontend_fallback(full_path: str):
     return FileResponse("static/index.html")

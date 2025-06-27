@@ -132,7 +132,6 @@ const PreferenceForm: React.FC<Props> = ({
           Preferences & Pets
         </Typography>
 
-        {/* Languages */}
         <FormControl fullWidth margin="normal">
           <InputLabel>Languages</InputLabel>
           <Select
@@ -151,7 +150,6 @@ const PreferenceForm: React.FC<Props> = ({
           </Select>
         </FormControl>
 
-        {/* Nationality */}
         <TextField
           fullWidth
           margin="normal"
@@ -167,7 +165,6 @@ const PreferenceForm: React.FC<Props> = ({
           ))}
         </TextField>
 
-        {/* Switches */}
         <Box display="flex" flexWrap="wrap" gap={2} mt={2}>
           <FormControlLabel control={<Switch checked={smoking} onChange={() => setSmoking(!smoking)} />} label="Smoking" />
           <FormControlLabel control={<Switch checked={petFriendly} onChange={() => setPetFriendly(!petFriendly)} />} label="Pet Friendly" />
@@ -176,7 +173,6 @@ const PreferenceForm: React.FC<Props> = ({
           <FormControlLabel control={<Switch checked={vegan} onChange={() => setVegan(!vegan)} />} label="Vegan" />
         </Box>
 
-        {/* Preferred Sex */}
         <FormControl fullWidth margin="normal">
           <InputLabel>Preferred Gender</InputLabel>
           <Select
@@ -195,7 +191,6 @@ const PreferenceForm: React.FC<Props> = ({
           </Select>
         </FormControl>
 
-        {/* Religion */}
         <TextField
           fullWidth
           margin="normal"
@@ -204,7 +199,6 @@ const PreferenceForm: React.FC<Props> = ({
           onChange={(e) => setReligion(e.target.value)}
         />
 
-        {/* Quiet Hours */}
         <Box display="flex" gap={2} mt={2}>
           <TextField
             label="Quiet Start"
@@ -222,7 +216,6 @@ const PreferenceForm: React.FC<Props> = ({
           />
         </Box>
 
-        {/* Pets */}
         <Box mt={3}>
           <FormControlLabel control={<Switch checked={hasPets} onChange={() => setHasPets(!hasPets)} />} label="I have pets" />
           {hasPets && (
@@ -246,7 +239,6 @@ const PreferenceForm: React.FC<Props> = ({
           )}
         </Box>
 
-        {/* Actions */}
         <Box mt={4} display="flex" justifyContent="space-between">
           <Button variant="outlined" onClick={onBack}>
             Back
@@ -257,6 +249,7 @@ const PreferenceForm: React.FC<Props> = ({
         </Box>
       </CardContent>
       <Snackbar
+      
   open={snackbar.open}
   autoHideDuration={3000}
   onClose={() => setSnackbar({ ...snackbar, open: false })}

@@ -1,9 +1,9 @@
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile, status
-from sqlalchemy import and_, func
+from sqlalchemy import and_
 from sqlalchemy.orm import Session, joinedload
-from service.auth import get_current_user, get_user_id
-from schemas.listing_schemas import GroupCreate, GroupResponse, ListingCreate, ListingResponse, ListingUpdateRequest, UpdateGroupPreferenceRequest
+from service.auth import get_current_user
+from schemas.listing_schemas import GroupCreate, GroupResponse, ListingResponse, ListingUpdateRequest, UpdateGroupPreferenceRequest
 from model.client_model import Group, GroupMember, Listing, User
 from dependencies import get_db
 import logging
@@ -143,8 +143,6 @@ def search_listings(
 
     return formatted_listings
 
-
-
 @router.get("/listings/{listing_id}", response_model=ListingResponse)
 def get_listing(listing_id: int, db: Session = Depends(get_db)):
     listing = db.query(Listing).filter(Listing.listing_id == listing_id).first()
@@ -178,7 +176,6 @@ def update_listing(
     if not listing:
         raise HTTPException(status_code=404, detail="Listing not found")
     
-    # Update the fields if its provided
     if listing_update.title is not None:
         listing.title = listing_update.title
     if listing_update.description is not None:
@@ -222,18 +219,14 @@ def delete_listing(
 
     if current_user.role != "admin" and current_user.user_id != listing.owner_id:
         raise HTTPException(status_code=403, detail="Not authorized to delete this listing")
-
-    # find and delete GroupMembers of groups tied to this listing
     groups_to_delete = db.query(Group).filter(Group.listing_id == listing_id).all()
 
     for group in groups_to_delete:
         db.query(GroupMember).filter(GroupMember.group_id == group.group_id).delete()
 
-    # delete groups themselves
     for group in groups_to_delete:
         db.delete(group)
 
-    # delete the listing
     db.delete(listing)
     db.commit()
 
@@ -286,6 +279,7 @@ def create_group(group: GroupCreate, db: Session = Depends(get_db), current_user
             }
         ]
     }
+
 @router.delete("/groups/{group_id}")
 def delete_group(
     group_id: int,
@@ -297,11 +291,9 @@ def delete_group(
     if not group:
         raise HTTPException(status_code=404, detail="Group not found")
 
-    # validate user auth
     if current_user.role != "admin" and current_user.user_id != group.owner_id:
         raise HTTPException(status_code=403, detail="Not authorized to delete this group")
 
-    # delete group members
     db.query(GroupMember).filter(GroupMember.group_id == group_id).delete()
 
     db.delete(group)
@@ -341,12 +333,10 @@ def get_group_details(group_id: int, db: Session = Depends(get_db)):
 
 @router.post("/groups/{group_id}/join")
 def join_group(group_id: int, db: Session = Depends(get_db), current_user=Depends(get_current_user)):
-    # valuidate if group exists
     group = db.query(Group).filter(Group.group_id == group_id).first()
     if not group:
         raise HTTPException(status_code=404, detail="Group not found")
 
-    # validate user
     existing_membership = db.query(GroupMember).filter(
         GroupMember.group_id == group_id,
         GroupMember.user_id == current_user.user_id
@@ -354,7 +344,6 @@ def join_group(group_id: int, db: Session = Depends(get_db), current_user=Depend
     if existing_membership:
         raise HTTPException(status_code=400, detail="You are already a member of this group")
 
-    # add user
     group_member = GroupMember(
         group_id=group_id,
         user_id=current_user.user_id
@@ -376,7 +365,6 @@ def update_group_preferences(
     if not group:
         raise HTTPException(status_code=404, detail="Group not found")
 
-    # chket if the current user is authorized (only group owner can update preferences)
     if group.owner_id != current_user.user_id:
         raise HTTPException(status_code=403, detail="Not authorized to update preferences")
 
@@ -389,7 +377,7 @@ def update_group_preferences(
 
 @router.get("/listings/{listing_id}/groups", response_model=List[GroupResponse])
 def get_groups_for_listing(listing_id: int, db: Session = Depends(get_db)):
-    # Query the database to get all groups for the listing
+
     groups = (
         db.query(Group)
         .options(joinedload(Group.members).joinedload(GroupMember.user))  
@@ -574,7 +562,6 @@ def leave_group(
     if not group:
         raise HTTPException(status_code=404, detail="Group not found")
 
-    # prevneting owner from leaving their own group
     if group.owner_id == current_user.user_id:
         raise HTTPException(status_code=403, detail="Group owner cannot leave their own group")
 

@@ -53,7 +53,6 @@ const handleSubmit = () => {
         gap: 0.5,
       }}
     >
-      {/* Search & City */}
       <Box
         sx={{
           display: "flex",
@@ -90,7 +89,6 @@ const handleSubmit = () => {
         />
       </Box>
 
-      {/* Price Range */}
       <Box sx={{ display: "flex", gap: 2 }}>
         <TextField
           label="Min Price"
@@ -120,7 +118,6 @@ const handleSubmit = () => {
         />
       </Box>
 
-      {/* Filter Buttons */}
       <Box sx={{ display: "flex", gap: 2, flexWrap: "wrap", justifyContent: "center" }}>
         {[
           {
@@ -171,7 +168,6 @@ const handleSubmit = () => {
         ))}
       </Box>
 
-      {/* Submit */}
       <Button
         onClick={handleSubmit}
         variant="contained"
