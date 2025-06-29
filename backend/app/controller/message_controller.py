@@ -7,6 +7,7 @@ from fastapi import APIRouter, Depends, HTTPException
 
 router = APIRouter()
 
+
 @router.get("/notifications")
 def fetch_notifications(db: Session = Depends(get_db), current_user: User = Depends(get_current_user)):
     notifications = db.query(Notification).filter(

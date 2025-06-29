@@ -1,5 +1,5 @@
 from pydantic import BaseModel
-from typing import Dict, Tuple, List, Optional
+from typing import Dict, List, Optional
 
 class ListingUpdateRequest(BaseModel):
     title: str

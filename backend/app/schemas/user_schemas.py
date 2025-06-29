@@ -1,5 +1,5 @@
 from pydantic import BaseModel, Field, EmailStr
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional
 
 class UserSummary(BaseModel):
     user_id: int
