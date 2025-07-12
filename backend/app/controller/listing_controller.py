@@ -1,3 +1,4 @@
+import os
 from typing import List, Optional
 from fastapi import APIRouter, Depends, HTTPException, Query, UploadFile, status
 from sqlalchemy import and_, func
@@ -47,14 +48,18 @@ async def create_listing(
 ):
     if price < 0:
         raise HTTPException(status_code=422, detail="Price must be a positive number.")
-    
-    saved_image_paths = []
+
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) 
+    uploads_dir = os.path.join(base_dir, "uploads")
+    os.makedirs(uploads_dir, exist_ok=True)
+
+    saved_image_paths: List[str] = []
     if images:
         for img in images:
-            file_location = f"uploads/{img.filename}"
-            with open(file_location, "wb") as buffer:
+            disk_path = os.path.join(uploads_dir, img.filename)
+            with open(disk_path, "wb") as buffer:
                 buffer.write(await img.read())
-            saved_image_paths.append(file_location)
+            saved_image_paths.append(f"uploads/{img.filename}")
 
     import json
     preferences_data = json.loads(preferences) if preferences else None
